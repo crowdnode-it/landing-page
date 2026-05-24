@@ -1,26 +1,1034 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:is(.dark *));
+
+html {
+  scroll-behavior: smooth;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: #f6f8f7;
+  --foreground: #0c2222;
+  --card: #ffffff;
+  --card-foreground: #0c2222;
+  --popover: #ffffff;
+  --popover-foreground: #0c2222;
+  --primary: #0c2222;
+  --primary-foreground: #ffffff;
+  --secondary: #e8eeec;
+  --secondary-foreground: #0c2222;
+  --muted: #eaf0ee;
+  --muted-foreground: #596a67;
+  --accent: #f2e5d8;
+  --accent-foreground: #0c2222;
+  --destructive: #c9502e;
+  --border: #d9e2de;
+  --input: #cdd8d4;
+  --ring: #194d4a;
+  --chart-1: #194d4a;
+  --chart-2: #d4a373;
+  --chart-3: #156cc2;
+  --chart-4: #0ea158;
+  --chart-5: #c9502e;
+  --radius: 0.5rem;
+  --sidebar: #f6f8f7;
+  --sidebar-foreground: #0c2222;
+  --sidebar-primary: #0c2222;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e8eeec;
+  --sidebar-accent-foreground: #0c2222;
+  --sidebar-border: #d9e2de;
+  --sidebar-ring: #194d4a;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+    text-rendering: geometricPrecision;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.parity-phone-stage {
+  position: relative;
+  display: grid;
+  min-height: min(78vh, 790px);
+  place-items: center;
+  padding: 18px 0;
+}
+
+.parity-phone-stage::before {
+  position: absolute;
+  inset: 7% 10% 2%;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--p-accent) 22%, transparent) 0%, transparent 68%);
+  content: "";
+  filter: blur(10px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.parity-phone {
+  position: relative;
+  width: min(390px, 100%);
+  aspect-ratio: 390 / 820;
+  border-radius: 58px;
+  padding: 10px;
+  background: linear-gradient(145deg, #1c1d20, #050608 48%, #26272a);
+  box-shadow:
+    0 30px 74px -34px rgba(0, 0, 0, 0.52),
+    0 14px 34px -20px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    inset 0 0 0 3px rgba(0, 0, 0, 0.7);
+}
+
+.parity-phone::before,
+.parity-phone::after {
+  position: absolute;
+  width: 4px;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #36383b, #111215);
+  content: "";
+}
+
+.parity-phone::before {
+  top: 128px;
+  left: -3px;
+  height: 50px;
+  box-shadow:
+    0 70px 0 #191a1d,
+    0 140px 0 #191a1d;
+}
+
+.parity-phone::after {
+  top: 220px;
+  right: -3px;
+  height: 88px;
+}
+
+.parity-phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 49px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.parity-phone-statusbar {
+  position: absolute;
+  z-index: 30;
+  inset: 0 0 auto;
+  display: flex;
+  height: 54px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 34px 0 35px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  pointer-events: none;
+}
+
+.parity-phone-status-icons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.parity-phone-status-icons svg {
+  display: block;
+}
+
+.parity-phone-island {
+  position: absolute;
+  z-index: 35;
+  top: 14px;
+  left: 50%;
+  width: 112px;
+  height: 36px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #000;
+  pointer-events: none;
+}
+
+.parity-phone-island::after {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 54% 46%, rgba(64, 94, 255, 0.88) 0 18%, rgba(31, 41, 115, 0.72) 30%, rgba(4, 5, 8, 0.95) 66%);
+  content: "";
+}
+
+.parity-phone-header {
+  position: absolute;
+  z-index: 36;
+  top: 64px;
+  right: 28px;
+  left: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.parity-phone-header h2 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.parity-phone-header > div {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.parity-phone-scroll {
+  position: absolute;
+  z-index: 5;
+  top: 106px;
+  right: 18px;
+  bottom: 100px;
+  left: 18px;
+  overflow: hidden;
+  border-radius: 22px;
+}
+
+.parity-phone-scroll-track {
+  height: 100%;
+  animation: parity-phone-scroll 14.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  will-change: transform;
+}
+
+.parity-phone-card {
+  position: relative;
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border-radius: 22px;
+  padding: 20px 20px 18px;
+}
+
+.parity-phone-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.parity-phone-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.parity-phone-sector {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.parity-phone-sector > span {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+.parity-phone-round-stage {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.parity-phone-thesis-label {
+  margin-bottom: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.parity-phone-headline {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-wrap: pretty;
+}
+
+.parity-phone-description {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.parity-phone-quote {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 0 10px 10px 0;
+}
+
+.parity-phone-quote p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.34;
+}
+
+.parity-phone-quote div {
+  margin-top: 6px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.parity-phone-spacer {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.parity-phone-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 14px;
+}
+
+.parity-phone-meta > div {
+  min-width: 0;
+  padding: 10px 4px;
+}
+
+.parity-phone-meta > div > div {
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.parity-phone-meta strong {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.parity-phone-impact {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.parity-phone-impact > div {
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  align-items: start;
+  gap: 10px;
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+
+.parity-phone-impact > div::before {
+  width: 9px;
+  height: 9px;
+  margin-top: 4px;
+  border-radius: 50%;
+  content: "";
+}
+
+.parity-phone-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+}
+
+.parity-phone-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.parity-phone-card-foot > div:last-child {
+  min-width: 0;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.parity-phone-card-foot b {
+  display: block;
+  overflow: hidden;
+  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.parity-phone-tabbar {
+  position: absolute;
+  z-index: 28;
+  right: 10px;
+  bottom: 18px;
+  left: 10px;
+  display: grid;
+  height: 72px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 8px 9px 10px;
+  border-radius: 28px;
+}
+
+.parity-phone-tab {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.parity-phone-tab svg {
+  width: 22px;
+  height: 22px;
+}
+
+.parity-phone-home-indicator {
+  position: absolute;
+  z-index: 40;
+  bottom: 7px;
+  left: 50%;
+  width: 112px;
+  height: 5px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #050506;
+  pointer-events: none;
+}
+
+.parity-phone-lara {
+  --phone-text: #f5f0e6;
+  --phone-background: #0c2222;
+  --phone-primary: #194d4a;
+  --phone-secondary: #263836;
+  --phone-accent: #d4a373;
+  --phone-muted: rgba(245, 240, 230, 0.6);
+  --phone-line: rgba(245, 240, 230, 0.12);
+}
+
+.parity-phone-lara .parity-phone-screen {
+  background: var(--phone-background);
+}
+
+.parity-phone-lara .parity-phone-statusbar,
+.parity-phone-lara .parity-phone-header {
+  color: var(--phone-text);
+}
+
+.parity-phone-lara .parity-phone-header h2 {
+  color: var(--phone-text);
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-weight: 400;
+}
+
+.parity-phone-lara .parity-phone-header h2 span,
+.parity-phone-lara .parity-phone-thesis-label {
+  color: var(--phone-accent);
+}
+
+.parity-phone-lara .parity-phone-header > div {
+  background: var(--phone-primary);
+  color: var(--phone-text);
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-weight: 400;
+}
+
+.parity-phone-lara .parity-phone-card {
+  border: 1px solid var(--phone-line);
+  background: var(--phone-background);
+  color: var(--phone-text);
+}
+
+.parity-phone-lara .parity-phone-card::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    radial-gradient(360px 280px at 88% 8%, rgba(212, 163, 115, 0.13), transparent 64%),
+    radial-gradient(420px 320px at -10% 90%, rgba(25, 77, 74, 0.5), transparent 64%);
+  content: "";
+  pointer-events: none;
+}
+
+.parity-phone-lara .parity-phone-sector,
+.parity-phone-lara .parity-phone-quote div,
+.parity-phone-lara .parity-phone-meta > div > div,
+.parity-phone-lara .parity-phone-card-foot > div:last-child,
+.parity-phone-lara .parity-phone-tab {
+  color: var(--phone-muted);
+}
+
+.parity-phone-lara .parity-phone-sector > span {
+  background: var(--phone-accent);
+}
+
+.parity-phone-lara .parity-phone-round-stage {
+  color: var(--phone-accent);
+  border-color: rgba(212, 163, 115, 0.55);
+}
+
+.parity-phone-lara .parity-phone-headline {
+  color: var(--phone-text);
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.parity-phone-lara .parity-phone-description,
+.parity-phone-lara .parity-phone-impact > div {
+  color: rgba(245, 240, 230, 0.78);
+}
+
+.parity-phone-lara .parity-phone-quote {
+  border-left: 2px solid var(--phone-accent);
+  background: rgba(38, 56, 54, 0.6);
+}
+
+.parity-phone-lara .parity-phone-quote p,
+.parity-phone-lara .parity-phone-meta strong,
+.parity-phone-lara .parity-phone-card-foot b {
+  color: var(--phone-text);
+  font-family: var(--font-instrument-serif), Georgia, serif;
+}
+
+.parity-phone-lara .parity-phone-meta {
+  border-top: 1px solid var(--phone-line);
+  border-bottom: 1px solid var(--phone-line);
+}
+
+.parity-phone-lara .parity-phone-meta > div {
+  border-right: 1px solid var(--phone-line);
+}
+
+.parity-phone-lara .parity-phone-meta > div:last-child {
+  border-right: 0;
+}
+
+.parity-phone-lara .parity-phone-impact b {
+  color: var(--phone-text);
+  font-weight: 600;
+}
+
+.parity-phone-lara .parity-phone-impact > div::before {
+  border: 1px solid var(--phone-accent);
+  background: transparent;
+}
+
+.parity-phone-lara .parity-phone-mark {
+  border: 1px solid var(--phone-accent);
+  background: var(--phone-primary);
+  color: var(--phone-accent);
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.parity-phone-lara .parity-phone-tabbar {
+  border: 1px solid var(--phone-line);
+  background: rgba(12, 34, 34, 0.92);
+  backdrop-filter: blur(20px);
+}
+
+.parity-phone-lara .parity-phone-tab.active {
+  color: var(--phone-accent);
+}
+
+.parity-phone-johann {
+  --phone-text: #101010;
+  --phone-background: #f0f2f5;
+  --phone-primary: #8c1118;
+  --phone-secondary: #d5d8dc;
+  --phone-accent: #a61b24;
+  --phone-muted: #6a6e74;
+  --phone-line: #c8ccd2;
+  --phone-paper: #fbfaf7;
+}
+
+.parity-phone-johann .parity-phone-screen {
+  background: var(--phone-background);
+}
+
+.parity-phone-johann .parity-phone-statusbar,
+.parity-phone-johann .parity-phone-header {
+  color: var(--phone-text);
+}
+
+.parity-phone-johann .parity-phone-header h2 {
+  color: var(--phone-text);
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-weight: 700;
+}
+
+.parity-phone-johann .parity-phone-header h2 span {
+  color: var(--phone-accent);
+}
+
+.parity-phone-johann .parity-phone-header > div {
+  background: var(--phone-text);
+  color: var(--phone-paper);
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-weight: 700;
+}
+
+.parity-phone-johann .parity-phone-card {
+  border: 1px solid var(--phone-line);
+  background: var(--phone-paper);
+  color: var(--phone-text);
+  box-shadow: 0 1px 0 var(--phone-line);
+}
+
+.parity-phone-johann .parity-phone-sector,
+.parity-phone-johann .parity-phone-quote div,
+.parity-phone-johann .parity-phone-meta > div > div,
+.parity-phone-johann .parity-phone-card-foot > div:last-child,
+.parity-phone-johann .parity-phone-tab {
+  color: var(--phone-muted);
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+.parity-phone-johann .parity-phone-sector > span,
+.parity-phone-johann .parity-phone-impact > div::before {
+  width: 9px;
+  height: 9px;
+  border-radius: 0;
+  background: var(--phone-accent);
+}
+
+.parity-phone-johann .parity-phone-round-stage {
+  border-color: var(--phone-accent);
+  border-radius: 3px;
+  background: rgba(166, 27, 36, 0.05);
+  color: var(--phone-accent);
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+.parity-phone-johann .parity-phone-thesis-label {
+  color: var(--phone-accent);
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+.parity-phone-johann .parity-phone-headline,
+.parity-phone-johann .parity-phone-description,
+.parity-phone-johann .parity-phone-quote p,
+.parity-phone-johann .parity-phone-impact > div,
+.parity-phone-johann .parity-phone-meta strong,
+.parity-phone-johann .parity-phone-card-foot b {
+  color: var(--phone-text);
+  font-family: var(--font-source-serif), Georgia, serif;
+}
+
+.parity-phone-johann .parity-phone-headline {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.04;
+}
+
+.parity-phone-johann .parity-phone-description {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.parity-phone-johann .parity-phone-quote {
+  border-left: 3px solid var(--phone-accent);
+  border-radius: 0;
+  background: var(--phone-secondary);
+}
+
+.parity-phone-johann .parity-phone-quote p {
+  font-weight: 500;
+}
+
+.parity-phone-johann .parity-phone-meta {
+  border-top: 1px solid var(--phone-text);
+  border-bottom: 1px solid var(--phone-text);
+}
+
+.parity-phone-johann .parity-phone-meta > div {
+  border-right: 1px solid var(--phone-line);
+}
+
+.parity-phone-johann .parity-phone-meta > div:last-child {
+  border-right: 0;
+}
+
+.parity-phone-johann .parity-phone-meta strong {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.parity-phone-johann .parity-phone-impact > div {
+  font-size: 12px;
+}
+
+.parity-phone-johann .parity-phone-impact b {
+  font-weight: 700;
+}
+
+.parity-phone-johann .parity-phone-card-foot {
+  border-top: 1px solid var(--phone-line);
+}
+
+.parity-phone-johann .parity-phone-mark {
+  border-radius: 4px;
+  background: var(--phone-text);
+  color: var(--phone-paper);
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-weight: 700;
+}
+
+.parity-phone-johann .parity-phone-tabbar {
+  border: 1px solid var(--phone-line);
+  background: var(--phone-paper);
+  box-shadow: 0 -2px 12px -8px rgba(0, 0, 0, 0.16);
+}
+
+.parity-phone-johann .parity-phone-tab {
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-weight: 600;
+}
+
+.parity-phone-johann .parity-phone-tab.active {
+  color: var(--phone-accent);
+}
+
+.parity-phone-bob {
+  --phone-text: #f0f8ff;
+  --phone-background: #080c14;
+  --phone-primary: #101929;
+  --phone-secondary: #1a2f4c;
+  --phone-accent: #00f0ff;
+  --phone-muted: rgba(240, 248, 255, 0.55);
+  --phone-line: rgba(240, 248, 255, 0.1);
+}
+
+.parity-phone-bob .parity-phone-screen {
+  background:
+    radial-gradient(540px 380px at 92% -10%, rgba(0, 240, 255, 0.16), transparent 60%),
+    radial-gradient(420px 320px at -10% 100%, rgba(0, 240, 255, 0.08), transparent 60%),
+    var(--phone-background);
+}
+
+.parity-phone-bob .parity-phone-statusbar,
+.parity-phone-bob .parity-phone-header {
+  color: var(--phone-text);
+}
+
+.parity-phone-bob .parity-phone-header h2,
+.parity-phone-bob .parity-phone-headline,
+.parity-phone-bob .parity-phone-quote p,
+.parity-phone-bob .parity-phone-impact > div,
+.parity-phone-bob .parity-phone-meta strong,
+.parity-phone-bob .parity-phone-card-foot b,
+.parity-phone-bob .parity-phone-tab {
+  font-family: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+}
+
+.parity-phone-bob .parity-phone-header h2 {
+  color: var(--phone-text);
+  font-weight: 700;
+}
+
+.parity-phone-bob .parity-phone-header h2 span,
+.parity-phone-bob .parity-phone-highlight,
+.parity-phone-bob .parity-phone-thesis-label,
+.parity-phone-bob .parity-phone-meta strong {
+  color: var(--phone-accent);
+}
+
+.parity-phone-bob .parity-phone-header h2 span {
+  text-shadow: 0 0 14px rgba(0, 240, 255, 0.6);
+}
+
+.parity-phone-bob .parity-phone-header > div {
+  border: 1px solid var(--phone-line);
+  background: linear-gradient(145deg, var(--phone-secondary), var(--phone-primary));
+  color: var(--phone-accent);
+  font-family: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+  font-weight: 700;
+}
+
+.parity-phone-bob .parity-phone-card {
+  border: 1px solid var(--phone-line);
+  background: linear-gradient(180deg, var(--phone-primary) 0%, var(--phone-background) 65%);
+  color: var(--phone-text);
+  box-shadow:
+    0 24px 60px -36px rgba(0, 240, 255, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.parity-phone-bob .parity-phone-card::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: radial-gradient(240px 180px at 90% 4%, rgba(0, 240, 255, 0.22), transparent 70%);
+  content: "";
+  pointer-events: none;
+}
+
+.parity-phone-bob .parity-phone-sector,
+.parity-phone-bob .parity-phone-round-stage {
+  color: var(--phone-accent);
+  font-family: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+}
+
+.parity-phone-bob .parity-phone-sector > span,
+.parity-phone-bob .parity-phone-impact > div::before {
+  background: var(--phone-accent);
+  box-shadow: 0 0 8px var(--phone-accent);
+}
+
+.parity-phone-bob .parity-phone-round-stage {
+  border-color: rgba(0, 240, 255, 0.45);
+  background: rgba(0, 240, 255, 0.08);
+}
+
+.parity-phone-bob .parity-phone-headline {
+  color: var(--phone-text);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.parity-phone-bob .parity-phone-description,
+.parity-phone-bob .parity-phone-impact > div {
+  color: rgba(240, 248, 255, 0.74);
+}
+
+.parity-phone-bob .parity-phone-quote {
+  border-left: 2px solid var(--phone-accent);
+  border-radius: 0 12px 12px 0;
+  background: rgba(0, 240, 255, 0.06);
+}
+
+.parity-phone-bob .parity-phone-quote p {
+  color: var(--phone-text);
+  font-weight: 500;
+}
+
+.parity-phone-bob .parity-phone-quote div,
+.parity-phone-bob .parity-phone-meta > div > div,
+.parity-phone-bob .parity-phone-card-foot > div:last-child,
+.parity-phone-bob .parity-phone-tab {
+  color: var(--phone-muted);
+}
+
+.parity-phone-bob .parity-phone-meta {
+  border-top: 1px solid var(--phone-line);
+  border-bottom: 1px solid var(--phone-line);
+}
+
+.parity-phone-bob .parity-phone-meta > div {
+  border-right: 1px solid var(--phone-line);
+}
+
+.parity-phone-bob .parity-phone-meta > div:last-child {
+  border-right: 0;
+}
+
+.parity-phone-bob .parity-phone-impact b {
+  color: var(--phone-text);
+  font-weight: 600;
+}
+
+.parity-phone-bob .parity-phone-mark {
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: var(--phone-secondary);
+  color: var(--phone-accent);
+  font-family: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+  font-weight: 700;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.25);
+}
+
+.parity-phone-bob .parity-phone-tabbar {
+  border: 1px solid var(--phone-line);
+  background: rgba(8, 12, 20, 0.92);
+  backdrop-filter: blur(20px);
+}
+
+.parity-phone-bob .parity-phone-tab.active {
+  color: var(--phone-accent);
+}
+
+@keyframes parity-phone-scroll {
+  0%,
+  18% {
+    transform: translate3d(0, 0, 0);
+  }
+  27%,
+  43% {
+    transform: translate3d(0, -100%, 0);
+  }
+  52%,
+  68% {
+    transform: translate3d(0, -200%, 0);
+  }
+  77%,
+  100% {
+    transform: translate3d(0, -300%, 0);
+  }
+}
+
+@media (max-width: 640px) {
+  .parity-phone-stage {
+    min-height: auto;
+    padding: 24px 0 0;
+  }
+
+  .parity-phone {
+    width: min(342px, 100%);
+    border-radius: 52px;
+  }
+
+  .parity-phone-scroll {
+    right: 16px;
+    left: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parity-phone-scroll-track {
+    animation: none;
+  }
 }
