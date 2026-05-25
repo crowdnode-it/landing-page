@@ -48,7 +48,7 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${instrumentSerif.variable} ${jetBrainsMono.variable} ${spaceGrotesk.variable} ${sourceSerif.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col text-[16px] leading-[1.65] [-webkit-font-smoothing:antialiased] [-moz-osx-font-smoothing:grayscale]">{children}</body>
     </html>
   );
 }

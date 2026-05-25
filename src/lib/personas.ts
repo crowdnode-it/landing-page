@@ -48,25 +48,26 @@ export type PersonaTheme = {
   closingTitle: string[]
   closingSub: string
   closingCta: string
+  lineColors: string[]
 }
 
 const SHARED_SUBTITLE =
   "Parity is a platform that lets everyday people invest €200 or more to own a real piece of new startups, giving them the freedom to easily sell those shares later whenever they want."
 
 const SECTION_SECONDARY_BODY =
-  "Every other startup investment comes with the same fine print: see you in a decade. We took that part out. List your stake on the secondary market and let another investor pick it up, or browse rounds that have already closed and buy in from someone exiting early. Trades settle on a blockchain, which in practice means: when someone buys your shares, the transfer is final, instant, and visible to both of you. No back-office, no paperwork, no waiting."
+  "Every other startup investment comes with the same fine print: **see you in a decade**. We took that part out.\n\nList your stake on the secondary market and let another investor pick it up, or browse rounds that have already closed and buy in from someone exiting early.\n\nTrades settle on a blockchain, which in practice means: when someone buys your shares, the transfer is **final, instant, and visible** to both of you. No back-office, no paperwork, no waiting."
 
 const SECTION_STARTKIT_LARA =
-  "Back the companies you believe in. All of them. StartKit lets you back several in a single transaction: pick the companies, set the weights, and own real shares in each. No fund manager picking for you. No €25,000 minimum per company. Just your portfolio, built by you."
+  "Back the companies you believe in. **All of them.**\n\nStartKit lets you back several in a single transaction: pick the companies, set the weights, and own **real shares** in each.\n\nNo fund manager picking for you. No €25,000 minimum per company. Just your portfolio, built by you."
 
 const SECTION_STARTKIT_JOHANN =
-  "Back six startups. Or eight. Or twelve. Real diversification in private markets used to require half a million euros, twenty companies at €25,000 each. Now you can back six startups with €1,200 and own a real piece of each one."
+  "Back six startups. Or eight. Or twelve.\n\n**Real diversification** in private markets used to require half a million euros, twenty companies at €25,000 each.\n\nNow you can back six startups with **€1,200** and own a real piece of each one."
 
 const SECTION_AFTER_LARA =
-  "Backing a company shouldn't end when the round closes. Most startup investments go dark after the round closes. You wire the money and you wait. We built the opposite: regular updates from founders, real performance metrics from the companies you back, and live prices from every trade on our secondary market. You'll know what's happening to your money for as long as you hold it."
+  "Backing a company shouldn't end when the round closes.\n\nMost startup investments **go dark** after the round closes. You wire the money and you wait. We built the opposite: **regular updates** from founders, real performance metrics from the companies you back, and live prices from every trade on our secondary market.\n\nYou'll know what's happening to your money for as long as you hold it."
 
 const SECTION_AFTER_JOHANN =
-  "Most startup investments go dark after the round closes. You wire the money and you wait. We built the opposite: regular updates from founders, real performance metrics from the companies you back, and live prices from every trade on our secondary market. You'll know what's happening to your money for as long as you hold it."
+  "Most startup investments **go dark** after the round closes. You wire the money and you wait.\n\nWe built the opposite: **regular updates** from founders, real performance metrics from the companies you back, and live prices from every trade on our secondary market.\n\nYou'll know what's happening to your money for as long as you hold it."
 
 export const personaKeys = ["lara", "johann", "bob"] as const
 
@@ -134,6 +135,7 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
     closingTitle: ["The next startup you", "believe in is waiting."],
     closingSub: "Be there at €200. Stay as long as you want. Sell when you choose.",
     closingCta: "Join the Waitlist",
+    lineColors: ["#D4A373", "#7FB6A8", "#B393C9", "#E3935F"],
   },
   johann: {
     key: "johann",
@@ -199,6 +201,7 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
     closingTitle: ["The next startup you", "believe in is waiting."],
     closingSub: "Real equity. EU-regulated. From €200. Exit when you choose.",
     closingCta: "Join the Waitlist",
+    lineColors: ["#a61b24", "#e07a86", "#9b5fa3", "#e07e3a"],
   },
   bob: {
     key: "bob",
@@ -236,7 +239,7 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
         label: "StartKit",
         title: "Spot the next big thing. Bet on a basket of them.",
         body:
-          "See what the community is backing right now. Build a portfolio of Europe's most hyped startups in one transaction. No fund manager, no €25k minimum, no waiting list. Pick the companies, set the weights, and own real shares in each.",
+          "See what the community is backing right now.\n\nBuild a portfolio of **Europe's most hyped startups** in one transaction. No fund manager, no €25k minimum, no waiting list.\n\nPick the companies, set the weights, and own **real shares** in each.",
         imageLabel: "TRENDING - STARTKIT HEATMAP",
         variant: "portfolio",
       },
@@ -245,7 +248,7 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
         label: "Secondary Market",
         title: "Trade when you want. Not in ten years.",
         body:
-          "Cash out, double down, or rotate into the next hyped round whenever you feel like it. Our secondary market lets you buy and sell shares without the traditional ten-year lock-up. Trades settle on a blockchain. Final, instant, visible.",
+          "Cash out, double down, or rotate into the next hyped round **whenever you feel like it**.\n\nOur secondary market lets you buy and sell shares without the traditional ten-year lock-up.\n\nTrades settle on a blockchain. **Final, instant, visible.**",
         imageLabel: "ORDER BOOK - LIVE TRADES",
         variant: "orderbook",
       },
@@ -254,7 +257,7 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
         label: "Live Feed",
         title: "Watch what the smart money is doing.",
         body:
-          "Founder drops, fresh rounds, exits, and every trade on the secondary market, streamed live. Know who's buying, who's selling, and who's getting in early. Your money doesn't go dark after the round closes. It glows.",
+          "Founder drops, fresh rounds, exits, and every trade on the secondary market, **streamed live**.\n\nKnow who's buying, who's selling, and who's getting in early.\n\nYour money doesn't go dark after the round closes. **It glows.**",
         imageLabel: "LIVE FEED - MARKET PULSE",
         variant: "chart",
       },
@@ -262,6 +265,7 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
     closingTitle: ["The next 100x startup", "is one tap away."],
     closingSub: "€200 gets you in. The next round closes in 3 days.",
     closingCta: "Join the Waitlist",
+    lineColors: ["#FF5470", "#FF8FA8", "#B58CFF", "#FF9647"],
   },
 }
 
