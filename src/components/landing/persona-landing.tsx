@@ -230,18 +230,16 @@ function PersonaGraphic({ variant, theme }: { variant: VisualVariant; theme: Per
   return (
     <div className="relative">
       <div className="absolute inset-0 rounded-2xl opacity-40 blur-[55px]" style={{ background: `var(--p-accent)` }} />
-      <svg viewBox={`0 0 ${artW} ${artH}`} width="100%" className="relative block rounded-2xl">
-        <foreignObject width={artW} height={artH}>
-          {graphic}
-        </foreignObject>
-      </svg>
+      <div className="relative w-full overflow-hidden rounded-2xl">
+        {graphic}
+      </div>
     </div>
   )
 }
 
 function Hero({ theme }: { theme: PersonaTheme }) {
   return (
-    <section className="relative overflow-hidden bg-[var(--p-bg)] px-6 pb-24 pt-16 sm:px-10 lg:px-16 lg:pb-32 xl:px-[88px]">
+    <section className="relative overflow-hidden bg-[var(--p-bg)] px-6 pb-24 pt-4 sm:px-10 lg:px-16 lg:pb-32 xl:px-[88px]">
       {theme.dark ? (
         <div className="pointer-events-none absolute -right-44 -top-56 size-[680px] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--p-accent)_22%,transparent)_0%,transparent_62%)]" />
       ) : null}

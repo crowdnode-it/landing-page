@@ -20,24 +20,37 @@ export function ScaledGraphic({
     const el = ref.current
     if (!el) return
 
-    function update() {
+    function measure() {
       const w = el!.clientWidth
-      if (w > 0) setZoom(w / artWidth)
+      if (w > 0) {
+        setZoom(w / artWidth)
+      } else {
+        requestAnimationFrame(measure)
+      }
     }
 
-    update()
-    const ro = new ResizeObserver(update)
+    measure()
+
+    const ro = new ResizeObserver(() => {
+      const w = el!.clientWidth
+      if (w > 0) setZoom(w / artWidth)
+    })
     ro.observe(el)
     return () => ro.disconnect()
   }, [artWidth])
 
   return (
-    <div ref={ref} className={className} style={{ width: "100%" }}>
-      {zoom !== null && (
-        <div style={{ width: artWidth, height: artHeight, zoom }}>
-          {children}
-        </div>
-      )}
+    <div ref={ref} className={className} style={{ width: "100%", overflow: "hidden" }}>
+      <div
+        style={{
+          width: artWidth,
+          height: artHeight,
+          zoom: zoom ?? 0.001,
+          opacity: zoom !== null ? 1 : 0,
+        }}
+      >
+        {children}
+      </div>
     </div>
   )
 }
