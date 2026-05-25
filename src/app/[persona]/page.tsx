@@ -29,6 +29,9 @@ export async function generateMetadata({ params }: PersonaPageProps): Promise<Me
   return {
     title: `Parity for ${theme.name}`,
     description: theme.subtitle,
+    other: {
+      "theme-color": theme.colors.bg,
+    },
   }
 }
 
