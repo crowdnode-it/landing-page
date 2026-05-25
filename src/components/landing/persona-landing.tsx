@@ -244,9 +244,6 @@ function Hero({ theme }: { theme: PersonaTheme }) {
         <div className="pointer-events-none absolute -right-44 -top-56 size-[680px] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--p-accent)_22%,transparent)_0%,transparent_62%)]" />
       ) : null}
       <div className="mx-auto w-full max-w-[1440px]">
-        <div className="mb-4">
-          <Eyebrow>{theme.eyebrow}</Eyebrow>
-        </div>
 
         <div className="grid min-w-0 grid-cols-1 items-center gap-14 lg:grid-cols-[1.32fr_0.88fr] xl:gap-20">
           <div className="min-w-0">
@@ -270,7 +267,7 @@ function Hero({ theme }: { theme: PersonaTheme }) {
               <WaitlistForm />
             </div>
           </div>
-          <div className="relative min-w-0 scale-[0.85] origin-top">
+          <div className="relative min-w-0 scale-[0.85] origin-center">
             <div className="absolute inset-4 rounded-3xl opacity-25 blur-[50px]" style={{ background: `var(--p-accent)` }} />
             <div className="relative">
               <PhoneScrollPreview theme={theme} />
