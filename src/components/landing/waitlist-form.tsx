@@ -111,9 +111,6 @@ export function WaitlistForm({ centered = false }: { centered?: boolean }) {
         <span>Join the Waitlist</span>
         <ArrowRight className="size-4" />
       </button>
-      <p className={cn("text-[11px] text-[var(--p-ink-mute)]", centered && "text-center")}>
-        No spam, ever. Unsubscribe anytime.
-      </p>
     </form>
   )
 }

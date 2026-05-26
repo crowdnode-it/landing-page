@@ -5,6 +5,7 @@ import type { CSSProperties, ReactNode } from "react"
 import { Button } from "@/components/ui/button"
 import { PhoneScrollPreview } from "@/components/landing/phone-scroll-preview"
 import { HashScroll } from "@/components/landing/hash-scroll"
+import { NavWrapper } from "@/components/landing/nav-wrapper"
 import { WaitlistForm } from "@/components/landing/waitlist-form"
 import { StartKit } from "@/components/graphics/start-kit"
 import { AfterInvestment } from "@/components/graphics/after-investment"
@@ -187,7 +188,7 @@ function CTAButton({
 
 function Nav({ theme }: { theme: PersonaTheme }) {
   return (
-    <div className="sticky top-0 z-50 border-b border-transparent bg-[color-mix(in_srgb,var(--p-bg)_85%,transparent)] backdrop-blur-md transition-colors">
+    <NavWrapper>
       <header className="mx-auto grid w-full min-w-0 max-w-[1440px] grid-cols-[1fr_auto] items-center gap-6 px-6 py-5 sm:px-10 lg:grid-cols-[1fr_auto_1fr] lg:px-16 xl:px-[88px]">
         <ParityMark />
         <nav className="hidden items-center gap-8 lg:flex">
@@ -205,7 +206,7 @@ function Nav({ theme }: { theme: PersonaTheme }) {
           <CTAButton size="sm">{theme.cta}</CTAButton>
         </div>
       </header>
-    </div>
+    </NavWrapper>
   )
 }
 
@@ -239,13 +240,13 @@ function PersonaGraphic({ variant, theme }: { variant: VisualVariant; theme: Per
 
 function Hero({ theme }: { theme: PersonaTheme }) {
   return (
-    <section className="relative min-h-[calc(100svh-120px)] overflow-hidden bg-[var(--p-bg)] px-6 pb-24 pt-0 sm:px-10 lg:px-16 lg:pb-32 xl:px-[88px]">
+    <section className="relative bg-[var(--p-bg)] px-6 pb-12 pt-20 sm:px-10 lg:px-16 lg:pb-16 xl:px-[88px]">
       {theme.dark ? (
         <div className="pointer-events-none absolute -right-44 -top-56 size-[680px] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--p-accent)_22%,transparent)_0%,transparent_62%)]" />
       ) : null}
       <div className="mx-auto w-full max-w-[1440px]">
 
-        <div className="grid min-w-0 grid-cols-1 items-center gap-14 lg:grid-cols-[1.32fr_0.88fr] xl:gap-20">
+        <div className="grid min-w-0 grid-cols-1 items-center gap-8 lg:grid-cols-[1.32fr_0.88fr] xl:gap-14">
           <div className="min-w-0">
             <h1
               className={cn(
@@ -267,15 +268,15 @@ function Hero({ theme }: { theme: PersonaTheme }) {
               <WaitlistForm />
             </div>
           </div>
-          <div className="relative min-w-0 scale-[0.85] origin-center">
-            <div className="absolute inset-4 rounded-3xl opacity-25 blur-[50px]" style={{ background: `var(--p-accent)` }} />
+          <div className="relative min-w-0 overflow-visible [zoom:0.75]">
+            <div className="absolute -inset-8 rounded-3xl opacity-25 blur-[60px]" style={{ background: `var(--p-accent)` }} />
             <div className="relative">
               <PhoneScrollPreview theme={theme} />
             </div>
           </div>
         </div>
 
-        <div className="mt-20 grid gap-6 sm:grid-cols-3 sm:gap-0">
+        <div className="mt-10 grid gap-6 sm:grid-cols-3 sm:gap-0">
           {stats.map((stat, index) => (
             <div
               key={stat.label}
@@ -299,6 +300,52 @@ function Hero({ theme }: { theme: PersonaTheme }) {
   )
 }
 
+
+const founders = [
+  { name: "Antonio De Cinque", role: "Product & Design", initials: "AD", photo: "/founders/antonio.jpeg", linkedin: "https://www.linkedin.com/in/antonio-de-cinque/", desc: "Software Dev Engineer at Amazon Luxembourg, with a Master's in Computer Engineering from Politecnico di Torino. Antonio brings a passion for product vision and crafting experiences that are both functional and beautifully designed." },
+  { name: "Bruno Carchia", role: "Strategy & Operations", initials: "BC", photo: "/founders/bruno.jpeg", linkedin: "https://www.linkedin.com/in/bruno-carchia/", desc: "-" },
+  { name: "Matteo Camellini", role: "AI & Engineering", initials: "MC", photo: "/founders/matteo.jpg", linkedin: "https://www.linkedin.com/in/matteo-camellini-209a28244/", desc: "With a Bachelor's in Computer Engineering from Politecnico di Milano, Matteo is currently pursuing a Master's in Data Science and Machine Learning at KTH. His interests span neural network architectures, quantitative finance and DJing." },
+  { name: "Giangiacomo Zanni", role: "Finance & Markets", initials: "GZ", photo: null, linkedin: "https://www.linkedin.com/in/giangiacomo-zanni/", desc: "-" },
+]
+
+function Founders() {
+  return (
+    <section className="border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-12 sm:px-10 lg:px-16 lg:py-16 xl:px-[88px]">
+      <div className="mx-auto max-w-[1440px]">
+        <h2 className="font-sans text-[clamp(1.8rem,3.2vw,2.5rem)]/[1.12] font-extrabold text-[var(--p-ink)] [letter-spacing:-0.03em]">
+          Who we are
+        </h2>
+        <p className="mt-4 text-[0.95rem] leading-[1.7] text-[var(--p-ink-soft)]">
+          Four founders building the infrastructure for accessible private-market investing in Europe.
+        </p>
+        <div className="mt-14 grid grid-cols-2 gap-8 sm:gap-12 lg:grid-cols-4">
+          {founders.map((f) => (
+            <a
+              key={f.initials}
+              href={f.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center text-center"
+            >
+              <div className="mb-5 size-24 overflow-hidden rounded-full border border-[var(--p-ink-line)] transition-colors group-hover:border-[var(--p-accent)] sm:size-28">
+                {f.photo ? (
+                  <img src={f.photo} alt={f.name} className="size-full object-cover" />
+                ) : (
+                  <div className="grid size-full place-items-center bg-[var(--p-surface)] font-sans text-xl font-bold text-[var(--p-ink-mute)] group-hover:text-[var(--p-accent)]">
+                    {f.initials}
+                  </div>
+                )}
+              </div>
+              <div className="font-sans text-[15px] font-semibold text-[var(--p-ink)]">{f.name}</div>
+              <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--p-ink-mute)]">{f.role}</div>
+              <div className="mt-3 text-[13px] leading-[1.6] text-[var(--p-ink-soft)]">{f.desc}</div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
 
 function FeatureSection({
   theme,
@@ -444,11 +491,14 @@ function MobileBottomNav() {
 
 export function PersonaLanding({ theme }: { theme: PersonaTheme }) {
   return (
-    <div style={themeVars(theme)} className="min-h-screen bg-[var(--p-bg)] text-[var(--p-ink)]">
+    <div style={{ ...themeVars(theme), background: theme.colors.bg }} className="min-h-screen bg-[var(--p-bg)] text-[var(--p-ink)]">
+      <style>{`html,body{background-color:${theme.colors.bg}}`}</style>
       <HashScroll />
       <Nav theme={theme} />
       <main className="overflow-x-hidden">
         <Hero theme={theme} />
+        <Founders />
+
         {theme.sections.map((section, index) => (
           <FeatureSection
             key={section.num}
