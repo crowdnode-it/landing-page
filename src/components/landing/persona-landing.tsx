@@ -325,7 +325,7 @@ function Founders() {
               href={f.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex flex-col items-center text-center"
+              className="group flex flex-col items-start text-left lg:items-center lg:text-center"
             >
               <div className="mb-5 size-24 overflow-hidden rounded-full border border-[var(--p-ink-line)] transition-colors group-hover:border-[var(--p-accent)] sm:size-28">
                 {f.photo ? (
