@@ -184,7 +184,7 @@ function Nav({ theme }: { theme: PersonaTheme }) {
           ))}
         </nav>
         <div className="flex items-center justify-end gap-4">
-          <CTAButton size="sm" location="nav">{theme.cta}</CTAButton>
+          <CTAButton size="sm">{theme.cta}</CTAButton>
         </div>
       </header>
     </NavWrapper>

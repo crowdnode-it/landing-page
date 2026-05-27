@@ -34,7 +34,8 @@ export function WaitlistForm({
   const [role, setRole] = useState("")
   const [submitted, setSubmitted] = useState(false)
 
-  // Refs for abandon tracking — avoids stale closure issues in event listeners
+  // Refs for abandon tracking — written synchronously in handlers so abandon listeners
+  // always read current values, even if they fire before the next React render cycle.
   const formState = useRef({
     emailFilled: false,
     roleFilled: false,
@@ -42,11 +43,6 @@ export function WaitlistForm({
     touchStartTime: null as number | null,
     submitted: false,
   })
-
-  // Keep ref in sync with state so the visibilitychange handler reads current values
-  useEffect(() => { formState.current.emailFilled = !!email }, [email])
-  useEffect(() => { formState.current.roleFilled = !!role }, [role])
-  useEffect(() => { formState.current.submitted = submitted }, [submitted])
 
   // form_abandon — fires when the user leaves with a touched but unsubmitted form.
   // Listens to both visibilitychange (tab switch) and pagehide (close/navigate away).
@@ -98,6 +94,7 @@ export function WaitlistForm({
 
   function handleRoleChange(value: string) {
     setRole(value)
+    formState.current.roleFilled = !!value
     formState.current.lastFieldTouched = "role"
     if (!formState.current.touchStartTime) {
       formState.current.touchStartTime = Date.now()
@@ -109,6 +106,9 @@ export function WaitlistForm({
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
     if (!email || !role) return
+    // Set ref synchronously before any async work — pagehide/visibilitychange listeners
+    // read the ref directly and must see submitted=true before the next render cycle.
+    formState.current.submitted = true
     trackWaitlistSignup(persona, role, formLocation)
     recordConversion()
     setSubmitted(true)
@@ -150,7 +150,10 @@ export function WaitlistForm({
           type="email"
           required
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value)
+            formState.current.emailFilled = !!e.target.value
+          }}
           onFocus={handleEmailFocus}
           onBlur={handleEmailBlur}
           placeholder="your@email.com"

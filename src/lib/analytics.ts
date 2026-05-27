@@ -139,17 +139,6 @@ export function trackNavClick(persona: string, navType: string, target: string) 
   track("nav_click", { persona, nav_type: navType, target })
 }
 
-/** BoF Q1 / Q3 · fires when any CTA button is clicked, carrying last-visible-section */
-export function trackCtaClick(persona: string, location: string) {
-  track("cta_click", {
-    persona,
-    location,
-    last_visible_section: _state.lastVisibleSection,
-    time_on_page_ms: Date.now() - _state.pageLoadTime,
-    scroll_depth_pct: _state.scrollDepthPct,
-  })
-}
-
 /** Post-Click Q1 · fires on email focus/blur and role select change */
 export function trackFormFieldInteract(
   persona: string,

@@ -1,5 +1,5 @@
 
-# The 11 Custom Events
+# The 10 Custom Events
 ## 1. page_landed
 
 **Trigger:** fires once on mount, ~200ms after load
@@ -39,16 +39,16 @@
 
 ## 4. section_dwell
 
-**Trigger:** fires when a section leaves the viewport after **at least 2 seconds of visibility** — filters out scroll-through flickers. Uses `IntersectionObserver` at 40% threshold — records `enterTime` on enter, fires event with `dwell_ms = Date.now() - enterTime` on exit.
+**Trigger:** fires when a section leaves the viewport after **at least 2 seconds of visibility** — filters out scroll-through flickers. Uses `IntersectionObserver` at `threshold: 0` — records `enterTime` on enter, fires event with `dwell_ms = Date.now() - enterTime` on exit.
 **Implementation:** single observer in `PageAnalytics` (`src/components/analytics/page-analytics.tsx`) targeting all elements with `data-section` attributes
 
-> **Note:** `_state.lastVisibleSection` is updated on every section *enter* with no minimum, so `cta_click` and `waitlist_signup` always carry the correct last-seen section even for sections the user scrolled through quickly without triggering a `section_dwell` event.
+> **Note:** `_state.lastVisibleSection` is updated on every section *enter* with no minimum, so `waitlist_signup` always carries the correct last-seen section even for sections the user scrolled through quickly without triggering a `section_dwell` event.
 
 * `persona` → "bob" | "johann" | "lara"
 * `section_id` → "hero" | "founders" | "startkit" | "secondary" | "track" | "join"
 * `dwell_ms` → number (milliseconds section was visible, always > 2000)
 
-**Answers:** MoF Q3 (which sections hold attention longest), MoF Q4 (cross-reference dwell by persona to see if Johann lingers on `#secondary` more than Bob), BoF Q3 (the last section with a high `dwell_ms` before `cta_click` — done via client-side variable, not a separate event)
+**Answers:** MoF Q3 (which sections hold attention longest), MoF Q4 (cross-reference dwell by persona to see if Johann lingers on `#secondary` more than Bob)
 
 
 ## 5. nav_click
@@ -63,21 +63,7 @@
 **Answers:** MoF Q5 — "Are users exploring or just scrolling?" Compare session rate of `nav_click` events vs. sessions where no `nav_click` fires but `scroll_depth≥75%` does. High scroll + no nav click = passive reader. Nav click = active explorer.
 
 
-## 6. cta_click
-
-**Trigger:** `onClick` on `CTAButton`
-**Implementation:** direct `onClick` handler in `src/components/landing/cta-button.tsx` (a dedicated `"use client"` component). Event delegation was originally used but proved unreliable because Base UI's `render` prop does not forward arbitrary `data-*` attributes to the DOM node. Reads `_state.persona`, `_state.lastVisibleSection`, `_state.scrollDepthPct`, and `_state.pageLoadTime` at click time.
-
-* `persona` → "bob" | "johann" | "lara"
-* `location` → "nav" | "hero" | "closing"
-* `last_visible_section` → "startkit" | "secondary" | "track" | "founders" etc.
-* `time_on_page_ms` → `Date.now() - page load time`
-* `scroll_depth_pct` → current scroll %, 0–100
-
-**Answers:** BoF Q1 ("Urgency to Convert" = `time_on_page_ms` distribution by persona — low median = high urgency), BoF Q3 (`last_visible_section` tells you exactly which feature precedes the conversion click), ToF Q3 (combine with Meta CPC data)
-
-
-## 7. form_field_interact
+## 6. form_field_interact
 
 **Trigger:** `onFocus`, `onBlur`, and `onChange` on the email input and role select inside WaitlistForm
 **Implementation:** add handlers to both fields in `waitlist-form.tsx`; track a `formState` ref (`{emailFocused, emailFilled, roleFilled, lastField}`)
@@ -90,10 +76,10 @@
 **Answers:** Post-Click Q1 — field-by-field abandonment. Segment users who fired `form_field_interact` `field=email` `action=focus` but never fired `waitlist_signup` to see where they dropped. Specifically tells you: did they fail at the email step, or did they balk at the role dropdown?
 
 
-## 8. form_abandon
+## 7. form_abandon
 
 **Trigger:** fires when the user leaves with a touched but unsubmitted form. Listens to **both** `visibilitychange→hidden` (tab switch/minimize) and `pagehide` (tab close / navigate away). A deduplication flag prevents double-firing when both events fire in sequence.
-**Implementation:** `useEffect` in `WaitlistForm` (`src/components/landing/waitlist-form.tsx`); uses the `formState` ref from event #7. The original `visibilitychange`-only implementation missed tab-close and page-navigation scenarios.
+**Implementation:** `useEffect` in `WaitlistForm` (`src/components/landing/waitlist-form.tsx`); uses the `formState` ref from event #6. The original `visibilitychange`-only implementation missed tab-close and page-navigation scenarios.
 
 * `persona` → "bob" | "johann" | "lara"
 * `form_location` → "hero" | "closing"
@@ -105,7 +91,7 @@
 **Answers:** Post-Click Q1 (completion friction). Pairs with `form_field_interact` to give you a funnel: `form_field_interact focus` → `form_field_interact blur_filled` → `form_abandon` vs. `waitlist_signup`. You'll see if people abandon after seeing the role dropdown options.
 
 
-## 9. waitlist_signup
+## 8. waitlist_signup
 
 **Trigger:** on successful `handleSubmit` in WaitlistForm, before `setSubmitted(true)`
 **Implementation:** add the analytics call inside `handleSubmit` in `waitlist-form.tsx`; reads shared refs for scroll state and last visible section (passed as props or via a context)
@@ -127,7 +113,7 @@
 * Post-Click Q2 (`is_returning` + `visit_count`)
 
 
-## 10. return_visit
+## 9. return_visit
 
 **Trigger:** fires on `page_landed` when `localStorage` confirms the user has been here before without converting
 **Implementation:** in PersonaLanding mount effect — if `localStorage.getItem('parity_visited')` exists but `localStorage.getItem('parity_converted')` does not, fire this event. Set both flags on first visit / conversion.
@@ -139,7 +125,7 @@
 **Answers:** Post-Click Q2 — "Impulsive vs. Returners." Compare `return_visit.prior_visit_count` distribution against `waitlist_signup.is_returning`. Reveals how long the consideration cycle is and which persona converts faster on return visits.
 
 
-## 11. iab_exit_prompt (conditional)
+## 10. iab_exit_prompt (conditional)
 
 **Trigger:** fires when `iab_type !== "none"` and the user taps the share button or tries to open in an external browser (detectable via a custom banner you render for IAB users)
 **Implementation:** render a small "Open in browser for best experience" banner only when UA indicates Instagram/Facebook IAB; instrument the banner's click
