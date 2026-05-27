@@ -52,7 +52,7 @@ export type PersonaTheme = {
 }
 
 const SHARED_SUBTITLE =
-  "Parity is a platform that lets everyday people invest €200 or more to own a real piece of new startups, giving them the freedom to easily sell those shares later whenever they want."
+  "With Parity, everyday people can buy real equity in new startups from €200, and easily sell those shares at any time"
 
 const SECTION_SECONDARY_BODY =
   "Every other startup investment comes with the same fine print: **see you in a decade**. We took that part out.\n\nList your stake on the secondary market and let another investor pick it up, or browse rounds that have already closed and buy in from someone exiting early.\n\nTrades settle on a blockchain, which in practice means: when someone buys your shares, the transfer is **final, instant, and visible** to both of you. No back-office, no paperwork, no waiting."
