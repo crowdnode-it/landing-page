@@ -49,6 +49,8 @@ export type PersonaTheme = {
   closingSub: string
   closingCta: string
   lineColors: string[]
+  rollingWord: string
+  rollingOptions: string[]
 }
 
 const SHARED_SUBTITLE =
@@ -136,6 +138,8 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
     closingSub: "Be there at €200. Stay as long as you want. Sell when you choose.",
     closingCta: "Join the Waitlist",
     lineColors: ["#D4A373", "#7FB6A8", "#B393C9", "#E3935F"],
+    rollingWord: "Support",
+    rollingOptions: ["Believe in", "Invest in", "Support"],
   },
   johann: {
     key: "johann",
@@ -202,6 +206,8 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
     closingSub: "Real equity. EU-regulated. From €200. Exit when you choose.",
     closingCta: "Join the Waitlist",
     lineColors: ["#a61b24", "#e07a86", "#9b5fa3", "#e07e3a"],
+    rollingWord: "Support",
+    rollingOptions: ["Back", "Invest in", "Believe in", "Support"],
   },
   bob: {
     key: "bob",
@@ -266,6 +272,8 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
     closingSub: "€200 gets you in. The next round closes in 3 days.",
     closingCta: "Join the Waitlist",
     lineColors: ["#FF5470", "#FF8FA8", "#B58CFF", "#FF9647"],
+    rollingWord: "Europe's",
+    rollingOptions: ["Italy's", "Spain's", "Europe's"],
   },
 }
 

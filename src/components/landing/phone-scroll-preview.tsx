@@ -128,7 +128,7 @@ export function PhoneScrollPreview({ theme }: { theme: PersonaTheme }) {
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 700, color: "var(--accent)" }}>
                     <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 8px var(--accent)" }} />
-                    Climate
+                    <span style={{ filter: "blur(4px)", userSelect: "none" }}>Climate</span>
                   </span>
                   <span style={{ fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 700, padding: "5px 10px 4px", borderRadius: 999, border: "1px solid currentColor", lineHeight: 1, color: "var(--accent)", background: "color-mix(in oklab, var(--accent) 8%, transparent)" }}>
                     Series A
@@ -136,17 +136,17 @@ export function PhoneScrollPreview({ theme }: { theme: PersonaTheme }) {
                 </div>
 
                 {/* Headline */}
-                <h2 style={{ fontSize: 28, lineHeight: 1, letterSpacing: "-0.05em", fontWeight: 800, color: "var(--text)" }}>
+                <h2 style={{ fontSize: 28, lineHeight: 1, letterSpacing: "-0.05em", fontWeight: 800, color: "var(--text)", filter: "blur(6px)", userSelect: "none" }}>
                   Wind farms, <span style={{ color: "var(--accent)" }}>owned by the people</span> who power them.
                 </h2>
 
                 {/* Description */}
-                <p style={{ marginTop: 12, fontSize: 13, lineHeight: 1.5, letterSpacing: "-0.005em", fontWeight: 400, color: "var(--muted)" }}>
+                <p style={{ marginTop: 12, fontSize: 13, lineHeight: 1.5, letterSpacing: "-0.005em", fontWeight: 400, color: "var(--muted)", filter: "blur(4px)", userSelect: "none" }}>
                   Tessera puts operating renewable infrastructure on a regulated rail. A real asset class for the savers who were locked out of the index funds that already own it.
                 </p>
 
                 {/* Quote */}
-                <div style={{ marginTop: 16, padding: "14px 16px", borderRadius: "0 12px 12px 0", background: "color-mix(in oklab, var(--accent) 7%, transparent)", borderLeft: "2px solid var(--accent)" }}>
+                <div style={{ marginTop: 16, padding: "14px 16px", borderRadius: "0 12px 12px 0", background: "color-mix(in oklab, var(--accent) 7%, transparent)", borderLeft: "2px solid var(--accent)", filter: "blur(4px)", userSelect: "none" }}>
                   <p style={{ fontSize: 13.5, lineHeight: 1.45, letterSpacing: "-0.01em", fontWeight: 600, color: "var(--text)" }}>
                     The grid was built by public money. The next one, by the public itself.
                   </p>
@@ -169,7 +169,7 @@ export function PhoneScrollPreview({ theme }: { theme: PersonaTheme }) {
                   ].map((m, i) => (
                     <div key={m.label} style={{ padding: "12px 12px 10px", borderRight: i < 2 ? "1px solid var(--line)" : "none" }}>
                       <div style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 600, color: "var(--muted)" }}>{m.label}</div>
-                      <div style={{ marginTop: 6, fontSize: 20, letterSpacing: "-0.035em", fontWeight: 800, fontVariantNumeric: "tabular-nums", lineHeight: 1, color: "var(--accent)" }}>{m.value}</div>
+                      <div style={{ marginTop: 6, fontSize: 20, letterSpacing: "-0.035em", fontWeight: 800, fontVariantNumeric: "tabular-nums", lineHeight: 1, color: "var(--accent)", filter: "blur(4px)", userSelect: "none" }}>{m.value}</div>
                     </div>
                   ))}
                 </div>
@@ -177,12 +177,12 @@ export function PhoneScrollPreview({ theme }: { theme: PersonaTheme }) {
                 {/* Impact */}
                 <div style={{ marginTop: 14, display: "grid", gap: 9 }}>
                   {[
-                    { strong: "Problem.", text: " Wind capacity sits in a few institutional funds. Retail savers are priced out." },
-                    { strong: "Solution.", text: " Tessera fractionalizes operating farms into €200 tickets under EU MiCA." },
+                    { strong: "Problem.", text: " Wind capacity sits in a few institutional funds. Retail savers are priced out.", blur: true },
+                    { strong: "Solution.", text: " Tessera fractionalizes operating farms into €200 tickets under EU MiCA.", blur: true },
                   ].map((row) => (
                     <div key={row.strong} style={{ display: "grid", gridTemplateColumns: "14px 1fr", alignItems: "start", gap: 10, fontSize: 12, lineHeight: 1.42, letterSpacing: "-0.005em", fontWeight: 400, color: "var(--muted)" }}>
                       <span style={{ width: 8, height: 8, marginTop: 5, borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 8px var(--accent)", display: "inline-block" }} />
-                      <span><b style={{ fontWeight: 700, color: "var(--text)" }}>{row.strong}</b>{row.text}</span>
+                      <span><b style={{ fontWeight: 700, color: "var(--text)" }}>{row.strong}</b><span style={{ filter: "blur(4px)", userSelect: "none" }}>{row.text}</span></span>
                     </div>
                   ))}
                 </div>
@@ -190,11 +190,11 @@ export function PhoneScrollPreview({ theme }: { theme: PersonaTheme }) {
                 {/* Footer */}
                 <div style={{ marginTop: 14, paddingBottom: 4, display: "flex", alignItems: "center", gap: 12 }}>
                   <div style={{ width: 36, height: 36, borderRadius: "50%", display: "grid", placeItems: "center", fontSize: 15, fontWeight: 800, letterSpacing: "-0.03em", background: "var(--secondary)", color: "var(--accent)", border: "1px solid color-mix(in oklab, var(--accent) 35%, transparent)", boxShadow: "0 0 14px color-mix(in oklab, var(--accent) 25%, transparent)" }}>
-                    t
+                    <span style={{ filter: "blur(4px)", userSelect: "none" }}>t</span>
                   </div>
                   <div>
                     <div style={{ fontSize: 9.5, textTransform: "uppercase", letterSpacing: "0.16em", fontWeight: 600, lineHeight: 1, color: "var(--muted)" }}>
-                      <b style={{ display: "block", fontWeight: 700, fontSize: 16, letterSpacing: "-0.02em", textTransform: "none", marginTop: 0, color: "var(--text)" }}>Tessera</b>
+                      <b style={{ display: "block", fontWeight: 700, fontSize: 16, letterSpacing: "-0.02em", textTransform: "none", marginTop: 0, color: "var(--text)", filter: "blur(4px)", userSelect: "none" }}>Tessera</b>
                       <span style={{ display: "inline-flex", alignItems: "center", gap: 4, marginTop: 4, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--muted)", lineHeight: 1 }}>
                         <svg style={{ width: 12, height: 12, color: "var(--accent)", flex: "0 0 auto" }} viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" fill="currentColor" /><path d="m6.8 11.4 2.8 2.8 5.6-6" stroke="var(--background)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                         Verified startup
