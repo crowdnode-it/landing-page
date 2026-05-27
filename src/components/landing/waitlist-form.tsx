@@ -1,8 +1,15 @@
 "use client"
 
-import { useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { ArrowRight, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
+import {
+  recordConversion,
+  recordFormTouch,
+  trackFormAbandon,
+  trackFormFieldInteract,
+  trackWaitlistSignup,
+} from "@/lib/analytics"
 
 const roles = [
   "Just curious - show me what you've got",
@@ -14,14 +21,80 @@ const roles = [
   "Institutional investor - looking for deal flow",
 ]
 
-export function WaitlistForm({ centered = false }: { centered?: boolean }) {
+export function WaitlistForm({
+  centered = false,
+  persona = "unknown",
+  formLocation = "hero",
+}: {
+  centered?: boolean
+  persona?: string
+  formLocation?: string
+}) {
   const [email, setEmail] = useState("")
   const [role, setRole] = useState("")
   const [submitted, setSubmitted] = useState(false)
 
+  // Refs for abandon tracking — avoids stale closure issues in event listeners
+  const formState = useRef({
+    emailFilled: false,
+    roleFilled: false,
+    lastFieldTouched: null as string | null,
+    touchStartTime: null as number | null,
+    submitted: false,
+  })
+
+  // Keep ref in sync with state so the visibilitychange handler reads current values
+  useEffect(() => { formState.current.emailFilled = !!email }, [email])
+  useEffect(() => { formState.current.roleFilled = !!role }, [role])
+  useEffect(() => { formState.current.submitted = submitted }, [submitted])
+
+  // form_abandon — fires on tab-hide / page-hide if form was touched but not submitted
+  useEffect(() => {
+    function onVisibilityChange() {
+      const s = formState.current
+      if (document.visibilityState === "hidden" && s.touchStartTime && !s.submitted) {
+        trackFormAbandon(
+          persona,
+          formLocation,
+          s.emailFilled,
+          s.roleFilled,
+          s.lastFieldTouched,
+          Date.now() - s.touchStartTime,
+        )
+      }
+    }
+    document.addEventListener("visibilitychange", onVisibilityChange)
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange)
+  }, [persona, formLocation])
+
+  function handleEmailFocus() {
+    if (!formState.current.touchStartTime) {
+      formState.current.touchStartTime = Date.now()
+      recordFormTouch()
+    }
+    formState.current.lastFieldTouched = "email"
+    trackFormFieldInteract(persona, formLocation, "email", "focus")
+  }
+
+  function handleEmailBlur() {
+    trackFormFieldInteract(persona, formLocation, "email", email ? "blur_filled" : "blur_empty")
+  }
+
+  function handleRoleChange(value: string) {
+    setRole(value)
+    formState.current.lastFieldTouched = "role"
+    if (!formState.current.touchStartTime) {
+      formState.current.touchStartTime = Date.now()
+      recordFormTouch()
+    }
+    trackFormFieldInteract(persona, formLocation, "role", "changed")
+  }
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
     if (!email || !role) return
+    trackWaitlistSignup(persona, role, formLocation)
+    recordConversion()
     setSubmitted(true)
   }
 
@@ -62,6 +135,8 @@ export function WaitlistForm({ centered = false }: { centered?: boolean }) {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          onFocus={handleEmailFocus}
+          onBlur={handleEmailBlur}
           placeholder="your@email.com"
           className={cn(fieldClass, "sm:flex-1")}
         />
@@ -69,7 +144,7 @@ export function WaitlistForm({ centered = false }: { centered?: boolean }) {
           <select
             required
             value={role}
-            onChange={(e) => setRole(e.target.value)}
+            onChange={(e) => handleRoleChange(e.target.value)}
             className={cn(
               fieldClass,
               "appearance-none pr-10 [color-scheme:light_dark]",

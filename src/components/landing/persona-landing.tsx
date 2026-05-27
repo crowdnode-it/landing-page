@@ -13,6 +13,7 @@ import { SecondaryMarket } from "@/components/graphics/secondary-market"
 import type { GraphicPalette } from "@/components/graphics/types"
 import { cn } from "@/lib/utils"
 import type { DisplayStyle, PersonaSection, PersonaTheme, VisualVariant } from "@/lib/personas"
+import { PageAnalytics } from "@/components/analytics/page-analytics"
 
 type PersonaCSSVars = CSSProperties & {
   "--p-bg": string
@@ -166,13 +167,15 @@ function Eyebrow({ children, center = false }: { children: ReactNode; center?: b
 function CTAButton({
   children,
   size = "lg",
+  location = "unknown",
 }: {
   children: ReactNode
   size?: "sm" | "lg"
+  location?: string
 }) {
   return (
     <Button
-      render={<a href="#join" />}
+      render={<a href="#join" data-track-cta={location} />}
       nativeButton={false}
       className={cn(
         "!h-auto rounded-full !bg-[var(--p-cta-bg)] !text-[var(--p-cta-text)] shadow-none hover:opacity-90",
@@ -196,6 +199,8 @@ function Nav({ theme }: { theme: PersonaTheme }) {
             <a
               key={item.href}
               href={item.href}
+              data-track-nav={item.href.replace("#", "")}
+              data-track-nav-type="top_desktop"
               className="text-sm font-medium [letter-spacing:-0.02em] text-[var(--p-ink-soft)] transition-colors hover:text-[var(--p-ink)]"
             >
               {item.label}
@@ -203,7 +208,7 @@ function Nav({ theme }: { theme: PersonaTheme }) {
           ))}
         </nav>
         <div className="flex items-center justify-end gap-4">
-          <CTAButton size="sm">{theme.cta}</CTAButton>
+          <CTAButton size="sm" location="nav">{theme.cta}</CTAButton>
         </div>
       </header>
     </NavWrapper>
@@ -240,7 +245,7 @@ function PersonaGraphic({ variant, theme }: { variant: VisualVariant; theme: Per
 
 function Hero({ theme }: { theme: PersonaTheme }) {
   return (
-    <section className="relative bg-[var(--p-bg)] px-6 pb-12 pt-20 sm:px-10 lg:px-16 lg:pb-16 xl:px-[88px]">
+    <section data-section="hero" className="relative bg-[var(--p-bg)] px-6 pb-12 pt-20 sm:px-10 lg:px-16 lg:pb-16 xl:px-[88px]">
       {theme.dark ? (
         <div className="pointer-events-none absolute -right-44 -top-56 size-[680px] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--p-accent)_22%,transparent)_0%,transparent_62%)]" />
       ) : null}
@@ -265,7 +270,7 @@ function Hero({ theme }: { theme: PersonaTheme }) {
               {theme.subtitle}
             </p>
             <div className="mt-9 max-w-xl">
-              <WaitlistForm />
+              <WaitlistForm persona={theme.key} formLocation="hero" />
             </div>
           </div>
           <div className="relative min-w-0 overflow-visible [zoom:0.75]">
@@ -310,7 +315,7 @@ const founders = [
 
 function Founders() {
   return (
-    <section className="border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-12 sm:px-10 lg:px-16 lg:py-16 xl:px-[88px]">
+    <section data-section="founders" className="border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-12 sm:px-10 lg:px-16 lg:py-16 xl:px-[88px]">
       <div className="mx-auto max-w-[1440px]">
         <h2 className="font-sans text-[clamp(1.8rem,3.2vw,2.5rem)]/[1.12] font-extrabold text-[var(--p-ink)] [letter-spacing:-0.03em]">
           Who we are
@@ -361,6 +366,7 @@ function FeatureSection({
   return (
     <section
       id={id}
+      data-section={id}
       className="relative scroll-mt-0 overflow-hidden border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-16 sm:px-10 lg:px-16 lg:py-24 xl:px-[88px]"
     >
       <div
@@ -406,6 +412,7 @@ function ClosingCTA({ theme }: { theme: PersonaTheme }) {
   return (
     <section
       id="join"
+      data-section="join"
       className="relative scroll-mt-0 overflow-hidden bg-[var(--p-bg-alt)] px-6 py-16 text-center sm:px-10 lg:px-16 lg:py-24 xl:px-[88px]"
     >
       {theme.dark ? (
@@ -435,7 +442,7 @@ function ClosingCTA({ theme }: { theme: PersonaTheme }) {
           {theme.closingSub}
         </p>
         <div className="mt-10">
-          <WaitlistForm centered />
+          <WaitlistForm centered persona={theme.key} formLocation="closing" />
         </div>
       </div>
     </section>
@@ -471,6 +478,8 @@ function MobileBottomNav() {
           <a
             key={href}
             href={href}
+            data-track-nav={href.replace("#", "")}
+            data-track-nav-type="mobile_pill"
             className={cn(
               "flex flex-1 flex-col items-center justify-center gap-2 py-3.5 text-[var(--p-ink-soft)] transition-colors hover:text-[var(--p-ink)]",
               i === 0 && "rounded-l-[22px]",
@@ -493,6 +502,7 @@ export function PersonaLanding({ theme }: { theme: PersonaTheme }) {
   return (
     <div style={{ ...themeVars(theme), background: theme.colors.bg }} className="min-h-screen bg-[var(--p-bg)] text-[var(--p-ink)]">
       <style>{`html,body{background-color:${theme.colors.bg}}`}</style>
+      <PageAnalytics persona={theme.key} />
       <HashScroll />
       <Nav theme={theme} />
       <main className="overflow-x-hidden">
