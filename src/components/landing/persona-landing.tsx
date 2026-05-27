@@ -280,7 +280,7 @@ function Hero({ theme }: { theme: PersonaTheme }) {
             >
               <HeroTitle theme={theme} />
             </h1>
-            <p className="mx-auto mt-8 max-w-[460px] text-[0.95rem] font-normal leading-[1.75] text-[var(--p-ink-mute)] lg:mx-0">
+            <p className="mx-auto mt-8 max-w-[460px] text-[0.95rem] font-normal leading-[1.75] text-[var(--p-ink-soft)] lg:mx-0">
               {theme.subtitle}
             </p>
             <div className="mx-auto mt-9 w-full max-w-xl lg:mx-0">
