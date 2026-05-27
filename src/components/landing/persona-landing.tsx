@@ -33,6 +33,7 @@ type PersonaCSSVars = CSSProperties & {
 }
 
 const navItems = [
+  { label: "Who we are", href: "#who-we-are" },
   { label: "StartKit", href: "#startkit" },
   { label: "Secondary Market", href: "#secondary" },
   { label: "After Investment", href: "#track" },
@@ -177,10 +178,10 @@ function HeroTitle({ theme }: { theme: PersonaTheme }) {
   return <>{lines}</>
 }
 
-function ParityMark({ size = "default" }: { size?: "default" | "small" }) {
+function ParityMark({ size = "default", href }: { size?: "default" | "small"; href: string }) {
   return (
     <Link
-      href="/lara"
+      href={href}
       className={cn(
         "inline-flex items-center gap-2 font-sans font-bold uppercase tracking-[0.08em] text-[var(--p-ink)]",
         size === "small" ? "text-xs" : "text-sm"
@@ -211,7 +212,7 @@ function Nav({ theme }: { theme: PersonaTheme }) {
   return (
     <NavWrapper>
       <header className="mx-auto grid w-full min-w-0 max-w-[1440px] grid-cols-[1fr_auto] items-center gap-6 px-6 py-5 sm:px-10 lg:grid-cols-[1fr_auto_1fr] lg:px-16 xl:px-[88px]">
-        <ParityMark />
+        <ParityMark href={`/${theme.key}`} />
         <nav className="hidden items-center gap-8 lg:flex">
           {navItems.map((item) => (
             <a
@@ -344,7 +345,7 @@ const founders = [
 
 function Founders() {
   return (
-    <section data-section="founders" className="border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-12 sm:px-10 lg:px-16 lg:py-16 xl:px-[88px]">
+    <section id="who-we-are" data-section="founders" className="scroll-mt-0 border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-12 sm:px-10 lg:px-16 lg:py-16 xl:px-[88px]">
       <div className="mx-auto max-w-[1440px]">
         <h2 className="font-sans text-[clamp(1.8rem,3.2vw,2.5rem)]/[1.12] font-extrabold text-[var(--p-ink)] [letter-spacing:-0.03em]">
           Who we are
@@ -446,7 +447,7 @@ function ClosingCTA({ theme }: { theme: PersonaTheme }) {
       ) : null}
       <div className="relative mx-auto max-w-5xl">
         <div className="mb-9 flex justify-center">
-          <ParityMark size="small" />
+          <ParityMark size="small" href={`/${theme.key}`} />
         </div>
         <h2
           className={cn(
@@ -479,7 +480,7 @@ function Footer({ theme }: { theme: PersonaTheme }) {
   return (
     <footer className="bg-[var(--p-bg)] px-6 py-12 sm:px-10 lg:px-16 xl:px-[88px]">
       <div className="mx-auto flex max-w-[1440px] flex-col gap-5 text-xs text-[var(--p-ink-mute)]">
-        <ParityMark size="small" />
+        <ParityMark size="small" href={`/${theme.key}`} />
         <p className="max-w-3xl text-[13px] font-normal leading-[1.8]">
           Parity is a concept landing page for a private-market investing platform.
           Private startup investments are high-risk, and may result in total loss of capital.
