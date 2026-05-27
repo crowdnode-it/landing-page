@@ -284,9 +284,9 @@ function Hero({ theme }: { theme: PersonaTheme }) {
 
 const founders = [
   { name: "Antonio De Cinque", role: "Product & Design", initials: "AD", photo: "/founders/antonio.jpeg", linkedin: "https://www.linkedin.com/in/antonio-de-cinque/", desc: "Software Dev Engineer at Amazon Luxembourg, with a Master's in Computer Engineering from Politecnico di Torino. Antonio brings a passion for product vision and crafting experiences that are both functional and beautifully designed." },
-  { name: "Bruno Carchia", role: "Strategy & Operations", initials: "BC", photo: "/founders/bruno.jpeg", linkedin: "https://www.linkedin.com/in/bruno-carchia/", desc: "-" },
+  { name: "Bruno Carchia", role: "Strategy & Operations", initials: "BC", photo: "/founders/bruno.jpeg", linkedin: "https://www.linkedin.com/in/bruno-carchia/", desc: "AI and Data Analytics graduate from Politecnico di Torino and KTH Royal Institute of Technology. Currently based in Stockholm, Bruno works as a Software Engineer at Visa while driving the overall organization and technical execution of Parity." },
   { name: "Matteo Camellini", role: "AI & Engineering", initials: "MC", photo: "/founders/matteo.jpg", linkedin: "https://www.linkedin.com/in/matteo-camellini-209a28244/", desc: "With a Bachelor's in Computer Engineering from Politecnico di Milano, Matteo is currently pursuing a Master's in Data Science and Machine Learning at KTH. His interests span neural network architectures, quantitative finance and DJing." },
-  { name: "Giangiacomo Zanni", role: "Finance & Markets", initials: "GZ", photo: null, linkedin: "https://www.linkedin.com/in/giangiacomo-zanni/", desc: "-" },
+  { name: "Giangiacomo Zanni", role: "Finance & Markets", initials: "GZ", photo: null, linkedin: "https://www.linkedin.com/in/giangiacomo-zanni/", desc: "Giangiacomo brings expertise in structured finance and data-driven decision making, with a track record in portfolio management at BNP Paribas Asset Management backed by an ESCP MiM with specializations in AI and Applied Data Science." },
 ]
 
 function Founders() {
@@ -301,11 +301,8 @@ function Founders() {
         </p>
         <div className="mt-14 grid grid-cols-2 gap-8 sm:gap-12 lg:grid-cols-4">
           {founders.map((f) => (
-            <a
+            <div
               key={f.initials}
-              href={f.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
               className="group flex flex-col items-start text-left lg:items-center lg:text-center"
             >
               <div className="mb-5 size-24 overflow-hidden rounded-full border border-[var(--p-ink-line)] transition-colors group-hover:border-[var(--p-accent)] sm:size-28">
@@ -320,7 +317,7 @@ function Founders() {
               <div className="font-sans text-[15px] font-semibold text-[var(--p-ink)]">{f.name}</div>
               <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--p-ink-mute)]">{f.role}</div>
               <div className="mt-3 text-[13px] leading-[1.6] text-[var(--p-ink-soft)]">{f.desc}</div>
-            </a>
+            </div>
           ))}
         </div>
       </div>
