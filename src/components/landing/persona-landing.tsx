@@ -1,8 +1,8 @@
 import Link from "next/link"
-import { ArrowLeftRight, ArrowRight, Layers3, TrendingUp } from "lucide-react"
+import { ArrowLeftRight, Layers3, TrendingUp } from "lucide-react"
 import type { CSSProperties, ReactNode } from "react"
 
-import { Button } from "@/components/ui/button"
+import { CTAButton } from "@/components/landing/cta-button"
 import { PhoneScrollPreview } from "@/components/landing/phone-scroll-preview"
 import { HashScroll } from "@/components/landing/hash-scroll"
 import { NavWrapper } from "@/components/landing/nav-wrapper"
@@ -164,30 +164,6 @@ function Eyebrow({ children, center = false }: { children: ReactNode; center?: b
   )
 }
 
-function CTAButton({
-  children,
-  size = "lg",
-  location = "unknown",
-}: {
-  children: ReactNode
-  size?: "sm" | "lg"
-  location?: string
-}) {
-  return (
-    <Button
-      render={<a href="#join" data-track-cta={location} />}
-      nativeButton={false}
-      className={cn(
-        "!h-auto rounded-full !bg-[var(--p-cta-bg)] !text-[var(--p-cta-text)] shadow-none hover:opacity-90",
-        "border border-transparent [letter-spacing:-0.005em]",
-        size === "sm" ? "px-4 py-2 text-[0.85rem] font-bold" : "px-6 py-3 text-[0.85rem] font-bold"
-      )}
-    >
-      <span>{children}</span>
-      <ArrowRight data-icon="inline-end" className="size-4" />
-    </Button>
-  )
-}
 
 function Nav({ theme }: { theme: PersonaTheme }) {
   return (

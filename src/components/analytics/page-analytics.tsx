@@ -7,7 +7,6 @@ import {
   detectIab,
   getVisitInfo,
   recordVisit,
-  trackCtaClick,
   trackNavClick,
   trackPageLanded,
   trackReturnVisit,
@@ -21,7 +20,8 @@ import type { PersonaKey } from "@/lib/personas"
  * Invisible client component mounted once inside PersonaLanding.
  * Handles all passive tracking: page_landed, session_survived_3s, scroll_depth,
  * section_dwell (IntersectionObserver), return_visit, and click-delegation for
- * cta_click and nav_click via data-track-cta / data-track-nav attributes.
+ * nav_click via data-track-nav attributes.
+ * cta_click is handled directly by CTAButton (src/components/landing/cta-button.tsx).
  */
 export function PageAnalytics({ persona }: { persona: PersonaKey }) {
   useEffect(() => {
@@ -87,8 +87,8 @@ export function PageAnalytics({ persona }: { persona: PersonaKey }) {
             if (enterTime !== undefined) {
               const dwellMs = Date.now() - enterTime
               enterTimes.delete(sectionId)
-              // Ignore sub-500ms flickers from fast scrolling
-              if (dwellMs > 500) {
+              // Only track genuine reading time — 2 s minimum filters out scroll-through flickers
+              if (dwellMs > 2000) {
                 trackSectionDwell(persona, sectionId, dwellMs)
               }
             }
@@ -102,18 +102,11 @@ export function PageAnalytics({ persona }: { persona: PersonaKey }) {
       .querySelectorAll("[data-section]")
       .forEach((el) => sectionObserver.observe(el))
 
-    // ── Click delegation for cta_click and nav_click ───────────────────────
-    // Server-rendered elements carry data-track-cta / data-track-nav attributes.
+    // ── Click delegation for nav_click ────────────────────────────────────
+    // Server-rendered nav anchors carry data-track-nav / data-track-nav-type.
+    // cta_click is handled directly in CTAButton via onClick.
     function onDocumentClick(e: MouseEvent) {
-      const target = e.target as HTMLElement
-
-      const ctaEl = target.closest("[data-track-cta]") as HTMLElement | null
-      if (ctaEl) {
-        trackCtaClick(persona, ctaEl.dataset.trackCta ?? "unknown")
-        return
-      }
-
-      const navEl = target.closest("[data-track-nav]") as HTMLElement | null
+      const navEl = (e.target as HTMLElement).closest("[data-track-nav]") as HTMLElement | null
       if (navEl) {
         trackNavClick(
           persona,

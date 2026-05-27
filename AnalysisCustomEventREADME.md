@@ -39,32 +39,34 @@
 
 ## 4. section_dwell
 
-**Trigger:** fires when a section leaves the viewport, with the time it was visible. Uses `IntersectionObserver` — record `enterTime` when section enters at ≥40% visibility, fire event with `dwell_ms = Date.now() - enterTime` when it exits
-**Implementation:** single observer in PersonaLanding targeting `#startkit`, `#secondary`, `#track`, `#join`, and the hero and founders divs via `data-section` attributes
+**Trigger:** fires when a section leaves the viewport after **at least 2 seconds of visibility** — filters out scroll-through flickers. Uses `IntersectionObserver` at 40% threshold — records `enterTime` on enter, fires event with `dwell_ms = Date.now() - enterTime` on exit.
+**Implementation:** single observer in `PageAnalytics` (`src/components/analytics/page-analytics.tsx`) targeting all elements with `data-section` attributes
+
+> **Note:** `_state.lastVisibleSection` is updated on every section *enter* with no minimum, so `cta_click` and `waitlist_signup` always carry the correct last-seen section even for sections the user scrolled through quickly without triggering a `section_dwell` event.
 
 * `persona` → "bob" | "johann" | "lara"
 * `section_id` → "hero" | "founders" | "startkit" | "secondary" | "track" | "join"
-* `dwell_ms` → number (milliseconds section was visible)
+* `dwell_ms` → number (milliseconds section was visible, always > 2000)
 
 **Answers:** MoF Q3 (which sections hold attention longest), MoF Q4 (cross-reference dwell by persona to see if Johann lingers on `#secondary` more than Bob), BoF Q3 (the last section with a high `dwell_ms` before `cta_click` — done via client-side variable, not a separate event)
 
 
 ## 5. nav_click
 
-**Trigger:** `onClick` handler on all anchor links in Nav (desktop top nav), MobileBottomNav, and the CTAButton in the nav bar
-**Implementation:** wrap the `href` anchors in `persona-landing.tsx` with an analytics call
+**Trigger:** click on any navigation anchor carrying `data-track-nav` — desktop top nav or mobile bottom pill
+**Implementation:** event delegation on `document` in `PageAnalytics` (`src/components/analytics/page-analytics.tsx`); anchors in `persona-landing.tsx` carry `data-track-nav` and `data-track-nav-type` attributes
 
 * `persona` → "bob" | "johann" | "lara"
-* `nav_type` → "top_desktop" | "mobile_pill" | "nav_cta"
-* `target` → "startkit" | "secondary" | "track" | "join"
+* `nav_type` → "top_desktop" | "mobile_pill"
+* `target` → "startkit" | "secondary" | "track"
 
 **Answers:** MoF Q5 — "Are users exploring or just scrolling?" Compare session rate of `nav_click` events vs. sessions where no `nav_click` fires but `scroll_depth≥75%` does. High scroll + no nav click = passive reader. Nav click = active explorer.
 
 
 ## 6. cta_click
 
-**Trigger:** `onClick` on every CTAButton and the `<a href="#join">` links, before navigation
-**Implementation:** intercept in CTAButton component and in Nav CTA; reads a shared client-side ref `lastVisibleSection` (updated by the same `IntersectionObserver` as `section_dwell`)
+**Trigger:** `onClick` on `CTAButton`
+**Implementation:** direct `onClick` handler in `src/components/landing/cta-button.tsx` (a dedicated `"use client"` component). Event delegation was originally used but proved unreliable because Base UI's `render` prop does not forward arbitrary `data-*` attributes to the DOM node. Reads `_state.persona`, `_state.lastVisibleSection`, `_state.scrollDepthPct`, and `_state.pageLoadTime` at click time.
 
 * `persona` → "bob" | "johann" | "lara"
 * `location` → "nav" | "hero" | "closing"
@@ -90,8 +92,8 @@
 
 ## 8. form_abandon
 
-**Trigger:** `visibilitychange` (tab hidden) or `pagehide` event, fires only if the form was touched (`emailFocused=true`) but `waitlist_signup` has not yet fired
-**Implementation:** `useEffect` cleanup / event listener in WaitlistForm; uses the `formState` ref from event #7
+**Trigger:** fires when the user leaves with a touched but unsubmitted form. Listens to **both** `visibilitychange→hidden` (tab switch/minimize) and `pagehide` (tab close / navigate away). A deduplication flag prevents double-firing when both events fire in sequence.
+**Implementation:** `useEffect` in `WaitlistForm` (`src/components/landing/waitlist-form.tsx`); uses the `formState` ref from event #7. The original `visibilitychange`-only implementation missed tab-close and page-navigation scenarios.
 
 * `persona` → "bob" | "johann" | "lara"
 * `form_location` → "hero" | "closing"
@@ -131,9 +133,8 @@
 **Implementation:** in PersonaLanding mount effect — if `localStorage.getItem('parity_visited')` exists but `localStorage.getItem('parity_converted')` does not, fire this event. Set both flags on first visit / conversion.
 
 * `persona` → "bob" | "johann" | "lara"
-* `days_since_first_visit` → number
-* `prior_visit_count` → number
-* `prior_form_touch` → boolean (did they reach the form last time?)
+* `visit_count` → number (total visits including this one)
+* `prior_form_touch` → boolean (did they interact with the form on a previous visit?)
 
 **Answers:** Post-Click Q2 — "Impulsive vs. Returners." Compare `return_visit.prior_visit_count` distribution against `waitlist_signup.is_returning`. Reveals how long the consideration cycle is and which persona converts faster on return visits.
 

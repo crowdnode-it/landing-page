@@ -48,11 +48,17 @@ export function WaitlistForm({
   useEffect(() => { formState.current.roleFilled = !!role }, [role])
   useEffect(() => { formState.current.submitted = submitted }, [submitted])
 
-  // form_abandon — fires on tab-hide / page-hide if form was touched but not submitted
+  // form_abandon — fires when the user leaves with a touched but unsubmitted form.
+  // Listens to both visibilitychange (tab switch) and pagehide (close/navigate away).
+  // A deduplication flag prevents double-firing when both events fire in sequence.
   useEffect(() => {
-    function onVisibilityChange() {
+    let fired = false
+
+    function fireAbandon() {
+      if (fired) return
       const s = formState.current
-      if (document.visibilityState === "hidden" && s.touchStartTime && !s.submitted) {
+      if (s.touchStartTime && !s.submitted) {
+        fired = true
         trackFormAbandon(
           persona,
           formLocation,
@@ -63,8 +69,18 @@ export function WaitlistForm({
         )
       }
     }
+
+    function onVisibilityChange() {
+      if (document.visibilityState === "hidden") fireAbandon()
+    }
+
     document.addEventListener("visibilitychange", onVisibilityChange)
-    return () => document.removeEventListener("visibilitychange", onVisibilityChange)
+    window.addEventListener("pagehide", fireAbandon)
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange)
+      window.removeEventListener("pagehide", fireAbandon)
+    }
   }, [persona, formLocation])
 
   function handleEmailFocus() {
