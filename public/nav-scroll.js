@@ -3,6 +3,20 @@
     var n=document.getElementById("main-nav");
     if(!n){setTimeout(init,100);return;}
 
+    // Intercept anchor clicks to offset for fixed nav
+    document.addEventListener("click",function(e){
+      var a=e.target.closest("a[href^='#']");
+      if(!a)return;
+      var id=a.getAttribute("href").slice(1);
+      var target=document.getElementById(id);
+      if(!target)return;
+      e.preventDefault();
+      var navH=n.offsetHeight||60;
+      var y=target.getBoundingClientRect().top+window.scrollY-navH;
+      window.scrollTo({top:y,behavior:"smooth"});
+      history.pushState(null,null,"#"+id);
+    });
+
     var theme=n.closest("[style*='--p-bg']");
     if(theme){
       var bg=getComputedStyle(theme).getPropertyValue("--p-bg").trim();

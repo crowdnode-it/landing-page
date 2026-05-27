@@ -361,7 +361,7 @@ function FeatureSection({
   return (
     <section
       id={id}
-      className="relative scroll-mt-10 overflow-hidden border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-24 sm:px-10 lg:px-16 lg:py-36 xl:px-[88px]"
+      className="relative scroll-mt-0 overflow-hidden border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-16 sm:px-10 lg:px-16 lg:py-24 xl:px-[88px]"
     >
       <div
         className={cn(
@@ -406,7 +406,7 @@ function ClosingCTA({ theme }: { theme: PersonaTheme }) {
   return (
     <section
       id="join"
-      className="relative scroll-mt-10 overflow-hidden bg-[var(--p-bg-alt)] px-6 py-28 text-center sm:px-10 lg:px-16 lg:py-40 xl:px-[88px]"
+      className="relative scroll-mt-0 overflow-hidden bg-[var(--p-bg-alt)] px-6 py-16 text-center sm:px-10 lg:px-16 lg:py-24 xl:px-[88px]"
     >
       {theme.dark ? (
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_85%,color-mix(in_srgb,var(--p-accent)_28%,transparent)_0%,transparent_62%)]" />
