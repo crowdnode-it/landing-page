@@ -293,37 +293,37 @@ function Hero({ theme }: { theme: PersonaTheme }) {
               <PhoneScrollPreview theme={theme} />
               {/* Floating stat cards */}
               <div
-                className="absolute -left-36 top-[18%] z-10 rounded-2xl border border-[var(--p-ink-line)] px-5 py-4"
+                className="absolute -left-10 top-[18%] z-10 rounded-2xl border border-[var(--p-ink-line)] px-4 py-3 sm:-left-24 sm:px-4 sm:py-3 lg:-left-36 lg:px-5 lg:py-4"
                 style={{
                   background: "color-mix(in srgb, var(--p-bg) 80%, transparent)",
                   backdropFilter: "blur(16px)",
                   boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
                 }}
               >
-                <div className="font-mono text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--p-ink-mute)]">Exit</div>
-                <div className="mt-1.5 font-sans text-3xl font-extrabold [letter-spacing:-0.03em] text-[var(--p-ink)]">When you choose</div>
+                <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--p-ink-mute)] sm:text-[10px] sm:tracking-[0.14em] lg:text-[12px] lg:tracking-[0.16em]">Exit</div>
+                <div className="mt-1.5 font-sans text-2xl font-extrabold leading-none [letter-spacing:-0.03em] text-[var(--p-ink)] lg:text-3xl">When you choose</div>
               </div>
               <div
-                className="absolute -right-20 top-[42%] z-10 rounded-2xl border border-[var(--p-ink-line)] px-5 py-4"
+                className="absolute -right-4 top-[42%] z-10 rounded-2xl border border-[var(--p-ink-line)] px-4 py-3 sm:-right-14 sm:px-4 sm:py-3 lg:-right-20 lg:px-5 lg:py-4"
                 style={{
                   background: "color-mix(in srgb, var(--p-bg) 80%, transparent)",
                   backdropFilter: "blur(16px)",
                   boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
                 }}
               >
-                <div className="font-mono text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--p-ink-mute)]">EU-regulated</div>
-                <div className="mt-1.5 font-sans text-3xl font-extrabold [letter-spacing:-0.03em] text-[var(--p-ink)]">Real equity</div>
+                <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--p-ink-mute)] sm:text-[10px] sm:tracking-[0.14em] lg:text-[12px] lg:tracking-[0.16em]">EU-regulated</div>
+                <div className="mt-1.5 font-sans text-2xl font-extrabold leading-none [letter-spacing:-0.03em] text-[var(--p-ink)] lg:text-3xl">Real equity</div>
               </div>
               <div
-                className="absolute -left-16 bottom-[14%] z-10 rounded-2xl border border-[var(--p-ink-line)] px-5 py-4"
+                className="absolute -left-4 bottom-[14%] z-10 rounded-2xl border border-[var(--p-ink-line)] px-4 py-3 sm:-left-10 sm:px-4 sm:py-3 lg:-left-16 lg:px-5 lg:py-4"
                 style={{
                   background: "color-mix(in srgb, var(--p-bg) 80%, transparent)",
                   backdropFilter: "blur(16px)",
                   boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
                 }}
               >
-                <div className="font-mono text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--p-ink-mute)]">From</div>
-                <div className="mt-1.5 font-sans text-3xl font-extrabold [letter-spacing:-0.03em] text-[var(--p-ink)]">€200</div>
+                <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--p-ink-mute)] sm:text-[10px] sm:tracking-[0.14em] lg:text-[12px] lg:tracking-[0.16em]">From</div>
+                <div className="mt-1.5 font-sans text-2xl font-extrabold leading-none [letter-spacing:-0.03em] text-[var(--p-ink)] lg:text-3xl">€200</div>
               </div>
             </div>
           </div>
