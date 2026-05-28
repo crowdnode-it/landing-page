@@ -58,19 +58,18 @@ export default function RootLayout({
         <Script src="/nav-scroll.js" strategy="afterInteractive" />
         {GA_ID && (
           <>
-            {/* Inline stub — runs synchronously so window.gtag is defined before any useEffect fires */}
+            {/* Inline — runs synchronously so gtag + config are ready before any useEffect fires.
+                The external script loads async; events queued before it arrives are replayed. */}
             <script dangerouslySetInnerHTML={{ __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_ID}', { send_page_view: false });
             `}} />
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
               strategy="afterInteractive"
             />
-            <Script id="ga4-config" strategy="afterInteractive">{`
-              gtag('js', new Date());
-              gtag('config', '${GA_ID}', { send_page_view: false });
-            `}</Script>
           </>
         )}
       </body>
