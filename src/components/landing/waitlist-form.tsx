@@ -250,7 +250,7 @@ export function WaitlistForm({
             {submittedEmail ? (
               <>
                 <p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-[var(--p-ink-soft)]">
-                  We saved your spot for early access. Your invite and launch updates will go to
+                  We saved your spot for early access. We&apos;ll reach back to you at
                 </p>
                 <p className="mx-auto mt-3 block max-w-full truncate whitespace-nowrap text-base font-extrabold text-[var(--p-ink)]">
                   {submittedEmail}
@@ -258,7 +258,7 @@ export function WaitlistForm({
               </>
             ) : (
               <p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-[var(--p-ink-soft)]">
-                We saved your spot for early access. Keep an eye on your inbox for the next Parity update.
+                We saved your spot for early access. We&apos;ll reach back to you soon.
               </p>
             )}
             <button

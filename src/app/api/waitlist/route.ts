@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 
 import { personaKeys, type PersonaKey } from "@/lib/personas"
 import { validateWaitlist } from "@/lib/waitlist"
+import { saveWaitlistLead } from "@/lib/db"
 
 function isPersonaKey(value: string): value is PersonaKey {
   return (personaKeys as readonly string[]).includes(value)
@@ -18,9 +19,17 @@ export async function POST(request: Request) {
 
   if (validationError) {
     redirectUrl.searchParams.set("waitlistError", validationError)
-  } else {
-    redirectUrl.searchParams.set("joined", "1")
+    return NextResponse.redirect(redirectUrl, 303)
   }
 
+  try {
+    await saveWaitlistLead(email, role, safePersona)
+  } catch (err) {
+    console.error("[waitlist] failed to save lead:", err)
+    redirectUrl.searchParams.set("waitlistError", "server")
+    return NextResponse.redirect(redirectUrl, 303)
+  }
+
+  redirectUrl.searchParams.set("joined", "1")
   return NextResponse.redirect(redirectUrl, 303)
 }
