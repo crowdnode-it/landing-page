@@ -35,8 +35,8 @@ type PersonaCSSVars = CSSProperties & {
 const navItems = [
   { label: "Who we are", href: "#who-we-are" },
   { label: "StartKit", href: "#startkit" },
-  { label: "Secondary Market", href: "#secondary" },
-  { label: "After Investment", href: "#track" },
+  { label: "Secondary Market", href: "#secondary-market" },
+  { label: "After Investment", href: "#after-investment" },
 ]
 
 
@@ -52,7 +52,7 @@ const heroTitleSizeClass: Record<DisplayStyle, string> = {
   space: "text-[clamp(2.4rem,5.8vw,4.8rem)]/[1.05]",
 }
 
-const sectionIds = ["startkit", "secondary", "track"]
+const sectionIds = ["startkit", "secondary-market", "after-investment"]
 
 function buildPalette(theme: PersonaTheme): GraphicPalette {
   const dark = !!theme.dark
@@ -212,7 +212,7 @@ function Nav({ theme }: { theme: PersonaTheme }) {
   return (
     <NavWrapper>
       <header className="mx-auto grid w-full min-w-0 max-w-[1440px] grid-cols-[1fr_auto] items-center gap-6 px-6 py-5 sm:px-10 lg:grid-cols-[1fr_auto_1fr] lg:px-16 xl:px-[88px]">
-        <ParityMark href={`/${theme.key}`} />
+        <ParityMark href="#hero" />
         <nav className="hidden items-center gap-8 lg:flex">
           {navItems.map((item) => (
             <a
@@ -262,9 +262,15 @@ function PersonaGraphic({ variant, theme }: { variant: VisualVariant; theme: Per
   )
 }
 
-function Hero({ theme }: { theme: PersonaTheme }) {
+function Hero({
+  theme,
+  initialWaitlistSubmitted = false,
+}: {
+  theme: PersonaTheme
+  initialWaitlistSubmitted?: boolean
+}) {
   return (
-    <section data-section="hero" className="relative bg-[var(--p-bg)] px-6 pb-12 pt-24 sm:px-10 sm:pt-28 lg:px-16 lg:pb-16 lg:pt-32 xl:px-[88px]">
+    <section id="hero" data-section="hero" className="relative bg-[var(--p-bg)] px-6 pb-12 pt-24 sm:px-10 sm:pt-28 lg:px-16 lg:pb-16 lg:pt-32 xl:px-[88px]">
       {theme.dark ? (
         <div className="pointer-events-none absolute -right-44 -top-56 size-[680px] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--p-accent)_22%,transparent)_0%,transparent_62%)]" />
       ) : null}
@@ -281,11 +287,15 @@ function Hero({ theme }: { theme: PersonaTheme }) {
             >
               <HeroTitle theme={theme} />
             </h1>
-            <p className="mx-auto mt-8 max-w-[460px] text-[0.95rem] font-normal leading-[1.75] text-[var(--p-ink-soft)] lg:mx-0">
+            <p className="mx-auto mt-8 max-w-[500px] text-[1.08rem] font-medium leading-[1.7] text-[color-mix(in_srgb,var(--p-ink)_82%,var(--p-ink-soft))] lg:mx-0">
               {theme.subtitle}
             </p>
             <div className="mx-auto mt-9 w-full max-w-xl lg:mx-0">
-              <WaitlistForm persona={theme.key} formLocation="hero" />
+              <WaitlistForm
+                persona={theme.key}
+                formLocation="hero"
+                initialSubmitted={initialWaitlistSubmitted}
+              />
             </div>
           </div>
           <div className="relative flex min-w-0 justify-center overflow-visible [zoom:0.75]">
@@ -345,7 +355,7 @@ const founders = [
 
 function Founders() {
   return (
-    <section id="who-we-are" data-section="founders" className="scroll-mt-0 border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-12 sm:px-10 lg:px-16 lg:py-16 xl:px-[88px]">
+    <section id="who-we-are" data-section="who-we-are" className="scroll-mt-0 border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-12 sm:px-10 lg:px-16 lg:py-16 xl:px-[88px]">
       <div className="mx-auto max-w-[1440px]">
         <h2 className="font-sans text-[clamp(1.8rem,3.2vw,2.5rem)]/[1.12] font-extrabold text-[var(--p-ink)] [letter-spacing:-0.03em]">
           Who we are
@@ -447,7 +457,7 @@ function ClosingCTA({ theme }: { theme: PersonaTheme }) {
       ) : null}
       <div className="relative mx-auto max-w-5xl">
         <div className="mb-9 flex justify-center">
-          <ParityMark size="small" href={`/${theme.key}`} />
+          <ParityMark size="small" href="#hero" />
         </div>
         <h2
           className={cn(
@@ -478,9 +488,9 @@ function ClosingCTA({ theme }: { theme: PersonaTheme }) {
 
 function Footer({ theme }: { theme: PersonaTheme }) {
   return (
-    <footer className="bg-[var(--p-bg)] px-6 py-12 sm:px-10 lg:px-16 xl:px-[88px]">
+    <footer className="bg-[var(--p-bg)] px-6 pb-32 pt-12 sm:px-10 lg:px-16 lg:py-12 xl:px-[88px]">
       <div className="mx-auto flex max-w-[1440px] flex-col gap-5 text-xs text-[var(--p-ink-mute)]">
-        <ParityMark size="small" href={`/${theme.key}`} />
+        <ParityMark size="small" href="#hero" />
         <p className="max-w-3xl text-[13px] font-normal leading-[1.8]">
           Parity is a concept landing page for a private-market investing platform.
           Private startup investments are high-risk, and may result in total loss of capital.
@@ -493,8 +503,8 @@ function Footer({ theme }: { theme: PersonaTheme }) {
 
 const mobileNavItems = [
   { label: "Start\nKit", href: "#startkit", Icon: Layers3 },
-  { label: "Secondary\nMarket", href: "#secondary", Icon: ArrowLeftRight },
-  { label: "After\nInvestment", href: "#track", Icon: TrendingUp },
+  { label: "Secondary\nMarket", href: "#secondary-market", Icon: ArrowLeftRight },
+  { label: "After\nInvestment", href: "#after-investment", Icon: TrendingUp },
 ]
 
 function MobileBottomNav() {
@@ -525,7 +535,13 @@ function MobileBottomNav() {
   )
 }
 
-export function PersonaLanding({ theme }: { theme: PersonaTheme }) {
+export function PersonaLanding({
+  theme,
+  initialWaitlistSubmitted = false,
+}: {
+  theme: PersonaTheme
+  initialWaitlistSubmitted?: boolean
+}) {
   return (
     <div style={{ ...themeVars(theme), background: theme.colors.bg }} className="min-h-screen bg-[var(--p-bg)] text-[var(--p-ink)]">
       <style>{`html,body{background-color:${theme.colors.bg}}`}</style>
@@ -533,7 +549,10 @@ export function PersonaLanding({ theme }: { theme: PersonaTheme }) {
       <HashScroll />
       <Nav theme={theme} />
       <main className="overflow-x-hidden">
-        <Hero theme={theme} />
+        <Hero
+          theme={theme}
+          initialWaitlistSubmitted={initialWaitlistSubmitted}
+        />
         <Founders />
 
         {theme.sections.map((section, index) => (

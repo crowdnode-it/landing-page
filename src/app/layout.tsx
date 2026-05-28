@@ -55,7 +55,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col text-[16px] leading-[1.65] [-webkit-font-smoothing:antialiased] [-moz-osx-font-smoothing:grayscale]">
         {children}
-        <script src="/nav-scroll.js" defer />
+        <Script src="/nav-scroll.js" strategy="afterInteractive" />
         {GA_ID && (
           <>
             <Script

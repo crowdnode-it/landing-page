@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState, type FormEvent } from "react"
-import { ArrowRight, Check } from "lucide-react"
+import { ArrowRight, Check, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   recordConversion,
@@ -25,14 +25,19 @@ export function WaitlistForm({
   centered = false,
   persona = "unknown",
   formLocation = "hero",
+  initialSubmitted = false,
 }: {
   centered?: boolean
   persona?: string
   formLocation?: string
+  initialSubmitted?: boolean
 }) {
   const [email, setEmail] = useState("")
   const [role, setRole] = useState("")
-  const [submitted, setSubmitted] = useState(false)
+  const [submitted, setSubmitted] = useState(initialSubmitted)
+  const [submittedEmail, setSubmittedEmail] = useState("")
+  const emailRef = useRef<HTMLInputElement>(null)
+  const roleRef = useRef<HTMLSelectElement>(null)
 
   // Refs for abandon tracking — written synchronously in handlers so abandon listeners
   // always read current values, even if they fire before the next React render cycle.
@@ -79,6 +84,13 @@ export function WaitlistForm({
     }
   }, [persona, formLocation])
 
+  useEffect(() => {
+    if (initialSubmitted) {
+      formState.current.submitted = true
+      setSubmitted(true)
+    }
+  }, [initialSubmitted])
+
   function handleEmailFocus() {
     if (!formState.current.touchStartTime) {
       formState.current.touchStartTime = Date.now()
@@ -89,7 +101,7 @@ export function WaitlistForm({
   }
 
   function handleEmailBlur() {
-    trackFormFieldInteract(persona, formLocation, "email", email ? "blur_filled" : "blur_empty")
+    trackFormFieldInteract(persona, formLocation, "email", emailRef.current?.value ? "blur_filled" : "blur_empty")
   }
 
   function handleRoleChange(value: string) {
@@ -103,34 +115,29 @@ export function WaitlistForm({
     trackFormFieldInteract(persona, formLocation, "role", "changed")
   }
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    if (!email || !role) return
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    if (submitted) return
+
+    const formData = new FormData(event.currentTarget)
+    const submittedEmail = String(formData.get("email") ?? emailRef.current?.value ?? email).trim()
+    const submittedRole = String(formData.get("role") ?? roleRef.current?.value ?? role)
+
     // Set ref synchronously before any async work — pagehide/visibilitychange listeners
     // read the ref directly and must see submitted=true before the next render cycle.
+    formState.current.emailFilled = true
+    formState.current.roleFilled = true
     formState.current.submitted = true
-    trackWaitlistSignup(persona, role, formLocation)
+    trackWaitlistSignup(persona, submittedRole, formLocation)
     recordConversion()
+    setSubmittedEmail(submittedEmail)
+    event.currentTarget.reset()
+    formState.current.emailFilled = false
+    formState.current.roleFilled = false
+    setEmail("")
+    setRole("")
     setSubmitted(true)
-  }
-
-  if (submitted) {
-    return (
-      <div
-        className={cn(
-          "flex items-center gap-4 rounded-2xl border border-[var(--p-accent)] bg-[color-mix(in_srgb,var(--p-accent)_10%,transparent)] px-6 py-5",
-          centered && "mx-auto w-fit"
-        )}
-      >
-        <div className="grid size-9 shrink-0 place-items-center rounded-full bg-[var(--p-accent)]">
-          <Check className="size-4 text-[var(--p-bg)]" />
-        </div>
-        <div>
-          <p className="text-sm font-semibold text-[var(--p-ink)]">You&apos;re on the list!</p>
-          <p className="text-xs text-[var(--p-ink-soft)]">We&apos;ll be in touch soon.</p>
-        </div>
-      </div>
-    )
   }
 
   const fieldClass = cn(
@@ -141,70 +148,129 @@ export function WaitlistForm({
   )
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className={cn("flex flex-col gap-3", centered && "mx-auto w-full max-w-md")}
-    >
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value)
-            formState.current.emailFilled = !!e.target.value
-          }}
-          onFocus={handleEmailFocus}
-          onBlur={handleEmailBlur}
-          placeholder="your@email.com"
-          className={cn(fieldClass, "sm:flex-1")}
-        />
-        <div className="relative sm:flex-1">
-          <select
-            required
-            value={role}
-            onChange={(e) => handleRoleChange(e.target.value)}
-            className={cn(
-              fieldClass,
-              "appearance-none pr-10 [color-scheme:light_dark]",
-              !role && "text-[var(--p-ink-mute)]"
-            )}
-          >
-            <option value="" disabled>
-              I am...
-            </option>
-            {roles.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
-          <svg
-            className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-[var(--p-ink-mute)]"
-            viewBox="0 0 16 16"
-            fill="none"
-          >
-            <path
-              d="M4 6l4 4 4-4"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
-      </div>
-      <button
-        type="submit"
-        className={cn(
-          "flex h-[52px] cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[var(--p-cta-bg)] text-[15px] font-semibold text-[var(--p-cta-text)]",
-          "transition-all hover:opacity-90 hover:shadow-[0_4px_24px_color-mix(in_srgb,var(--p-accent)_30%,transparent)] active:scale-[0.98]",
-          "[letter-spacing:-0.005em]"
-        )}
+    <>
+      <form
+        action="/api/waitlist"
+        method="post"
+        onSubmit={handleSubmit}
+        aria-label="Join the waitlist"
+        className={cn("flex flex-col gap-3", centered && "mx-auto w-full max-w-md")}
       >
-        <span>Join the Waitlist</span>
-        <ArrowRight className="size-4" />
-      </button>
-    </form>
+        <input type="hidden" name="persona" value={persona} />
+        <input type="hidden" name="formLocation" value={formLocation} />
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <input
+            ref={emailRef}
+            type="email"
+            name="email"
+            inputMode="email"
+            autoComplete="email"
+            required
+            onChange={(e) => {
+              setEmail(e.target.value)
+              formState.current.emailFilled = !!e.target.value
+            }}
+            onFocus={handleEmailFocus}
+            onBlur={handleEmailBlur}
+            placeholder="your@email.com"
+            className={cn(fieldClass, "sm:flex-1")}
+          />
+          <div className="relative sm:flex-1">
+            <select
+              ref={roleRef}
+              name="role"
+              defaultValue=""
+              required
+              onChange={(e) => handleRoleChange(e.target.value)}
+              className={cn(
+                fieldClass,
+                "appearance-none pr-10 [color-scheme:light_dark]",
+                !role && "text-[var(--p-ink-mute)]"
+              )}
+            >
+              <option value="" disabled>
+                I am...
+              </option>
+              {roles.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+            <svg
+              className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-[var(--p-ink-mute)]"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
+              <path
+                d="M4 6l4 4 4-4"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
+        <button
+          type="submit"
+          className={cn(
+            "flex h-[52px] cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[var(--p-cta-bg)] text-[15px] font-semibold text-[var(--p-cta-text)]",
+            "transition-all hover:opacity-90 hover:shadow-[0_4px_24px_color-mix(in_srgb,var(--p-accent)_30%,transparent)] active:scale-[0.98]",
+            "[letter-spacing:-0.005em]"
+          )}
+        >
+          <span>Join the Waitlist</span>
+          <ArrowRight className="size-4" />
+        </button>
+      </form>
+
+      {submitted ? (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="waitlist-success-title"
+          className="fixed inset-0 z-[90] grid place-items-center bg-black/55 px-5 backdrop-blur-sm"
+        >
+          <div className="relative w-full max-w-md rounded-3xl border border-[var(--p-ink-line)] bg-[var(--p-bg)] px-7 py-8 text-center shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
+            <button
+              type="button"
+              aria-label="Close"
+              onClick={() => setSubmitted(false)}
+              className="absolute right-4 top-4 grid size-8 place-items-center rounded-full text-[var(--p-ink-soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--p-surface)_70%,transparent)] hover:text-[var(--p-ink)]"
+            >
+              <X className="size-4" />
+            </button>
+            <div className="mx-auto grid size-14 place-items-center rounded-full bg-[var(--p-accent-2)]">
+              <Check className="size-6 text-white" />
+            </div>
+            <h2 id="waitlist-success-title" className="mt-6 text-2xl font-extrabold leading-tight text-[var(--p-ink)] [letter-spacing:-0.03em]">
+              You&apos;re on the list.
+            </h2>
+            {submittedEmail ? (
+              <>
+                <p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-[var(--p-ink-soft)]">
+                  We saved your spot for early access. Your invite and launch updates will go to
+                </p>
+                <p className="mx-auto mt-3 block max-w-full truncate whitespace-nowrap text-base font-extrabold text-[var(--p-ink)]">
+                  {submittedEmail}
+                </p>
+              </>
+            ) : (
+              <p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-[var(--p-ink-soft)]">
+                We saved your spot for early access. Keep an eye on your inbox for the next Parity update.
+              </p>
+            )}
+            <button
+              type="button"
+              onClick={() => setSubmitted(false)}
+              className="mt-7 h-11 rounded-full bg-[var(--p-ink)] px-6 text-sm font-bold text-[var(--p-bg)] transition-opacity hover:opacity-90"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </>
   )
 }
