@@ -8,6 +8,9 @@ type PersonaPageProps = {
   params: Promise<{
     persona: string
   }>
+  searchParams?: Promise<{
+    joined?: string
+  }>
 }
 
 export const dynamicParams = false
@@ -27,7 +30,7 @@ export async function generateMetadata({ params }: PersonaPageProps): Promise<Me
   }
 
   return {
-    title: `Parity for ${theme.name}`,
+    title: "Parity",
     description: theme.subtitle,
     other: {
       "theme-color": theme.colors.bg,
@@ -35,13 +38,19 @@ export async function generateMetadata({ params }: PersonaPageProps): Promise<Me
   }
 }
 
-export default async function PersonaPage({ params }: PersonaPageProps) {
+export default async function PersonaPage({ params, searchParams }: PersonaPageProps) {
   const { persona } = await params
+  const query = searchParams ? await searchParams : {}
   const theme = personas[persona as PersonaKey]
 
   if (!theme) {
     notFound()
   }
 
-  return <PersonaLanding theme={theme} />
+  return (
+    <PersonaLanding
+      theme={theme}
+      initialWaitlistSubmitted={query.joined === "1"}
+    />
+  )
 }

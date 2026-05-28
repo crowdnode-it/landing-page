@@ -104,8 +104,8 @@ export function PageAnalytics({ persona }: { persona: PersonaKey }) {
             if (enterTime !== undefined) {
               const dwellMs = Date.now() - enterTime
               enterTimes.delete(sectionId)
-              // Only track genuine reading time — 2 s minimum filters out scroll-through flickers
-              if (dwellMs > 2000) {
+              // Only track genuine reading time — 3.5 s minimum filters out scroll-through flickers
+              if (dwellMs > 3500) {
                 trackSectionDwell(persona, sectionId, dwellMs)
               }
             }

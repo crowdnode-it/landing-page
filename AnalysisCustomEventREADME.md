@@ -39,7 +39,7 @@
 
 ## 4. section_dwell
 
-**Trigger:** fires when a section leaves the viewport after **at least 2 seconds of visibility** — filters out scroll-through flickers. Uses `IntersectionObserver` at `threshold: 0` — records `enterTime` on enter, fires event with `dwell_ms = Date.now() - enterTime` on exit.
+**Trigger:** fires when a section leaves the viewport after **at least 3,5 seconds of visibility** — filters out scroll-through flickers. Uses `IntersectionObserver` at `threshold: 0` — records `enterTime` on enter, fires event with `dwell_ms = Date.now() - enterTime` on exit.
 **Implementation:** single observer in `PageAnalytics` (`src/components/analytics/page-analytics.tsx`) targeting all elements with `data-section` attributes
 
 > **Note:** `_state.lastVisibleSection` is updated on every section *enter* with no minimum, so `waitlist_signup` always carries the correct last-seen section even for sections the user scrolled through quickly without triggering a `section_dwell` event.
