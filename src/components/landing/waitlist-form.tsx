@@ -138,6 +138,10 @@ export function WaitlistForm({
     setEmail("")
     setRole("")
     setSubmitted(true)
+
+    fetch("/api/waitlist", { method: "POST", body: formData }).catch((err) => {
+      console.error("[waitlist] failed to save lead:", err)
+    })
   }
 
   const fieldClass = cn(
