@@ -53,9 +53,6 @@ export type PersonaTheme = {
   rollingOptions: string[]
 }
 
-const SHARED_SUBTITLE =
-  "With Parity, everyday people can buy real equity in new startups from €200, and easily sell those shares at any time"
-
 const SECTION_SECONDARY_BODY =
   "Every other startup investment comes with the same fine print: **see you in a decade**. We took that part out.\n\nList your stake on the secondary market and let another investor pick it up, or browse rounds that have already closed and buy in from someone exiting early.\n\nTrades settle on a blockchain, which in practice means: when someone buys your shares, the transfer is **final, instant, and visible** to both of you. No back-office, no paperwork, no waiting."
 
@@ -95,14 +92,9 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
       ctaText: "#0C2222",
     },
     eyebrow: "For people who fund ideas",
-    title: [
-      "Support the ideas",
-      "of tomorrow,",
-      "powered by the",
-      "community of today.",
-    ],
-    titleAccentWords: ["ideas", "community"],
-    subtitle: SHARED_SUBTITLE,
+    title: ["Support the next great startup now."],
+    titleAccentWords: ["startup"],
+    subtitle: "Real equity.\nReal legal rights.\nBuilt under UE rules.",
     cta: "Join the Waitlist",
     ctaSecondary: "How it works",
     personaNote:
@@ -139,7 +131,7 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
     closingCta: "Join the Waitlist",
     lineColors: ["#D4A373", "#7FB6A8", "#B393C9", "#E3935F"],
     rollingWord: "Support",
-    rollingOptions: ["Believe in", "Invest in", "Support"],
+    rollingOptions: ["Support"],
   },
   johann: {
     key: "johann",
@@ -162,15 +154,9 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
       ctaText: "#F0F2F5",
     },
     eyebrow: "For the smart money",
-    title: [
-      "Support the next",
-      "great startup.",
-      "Sell your stake",
-      "when you're ready,",
-      "not in ten years.",
-    ],
-    titleAccentWords: ["startup", "ten", "years"],
-    subtitle: SHARED_SUBTITLE,
+    title: ["Support the next great startup now."],
+    titleAccentWords: ["startup"],
+    subtitle: "Real equity.\nReal legal rights.\nBuilt under UE rules.",
     cta: "Join the Waitlist",
     ctaSecondary: "See the thesis",
     personaNote:
@@ -207,7 +193,7 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
     closingCta: "Join the Waitlist",
     lineColors: ["#a61b24", "#e07a86", "#9b5fa3", "#e07e3a"],
     rollingWord: "Support",
-    rollingOptions: ["Back", "Invest in", "Believe in", "Support"],
+    rollingOptions: ["Support"],
   },
   bob: {
     key: "bob",
@@ -231,9 +217,9 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
       ctaText: "#080C14",
     },
     eyebrow: "Live now - Europe's new rounds",
-    title: ["Europe's best", "startups are", "raising now.", "Get in."],
-    titleAccentWords: ["now", "in"],
-    subtitle: SHARED_SUBTITLE,
+    title: ["Support the next great startup now."],
+    titleAccentWords: ["startup"],
+    subtitle: "Real equity.\nReal legal rights.\nBuilt under UE rules.",
     cta: "Join the Waitlist",
     ctaSecondary: "What's hot",
     personaNote:
@@ -272,8 +258,8 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
     closingSub: "€200 gets you in. The next round closes in 3 days.",
     closingCta: "Join the Waitlist",
     lineColors: ["#FF5470", "#FF8FA8", "#B58CFF", "#FF9647"],
-    rollingWord: "Europe's",
-    rollingOptions: ["Italy's", "Spain's", "Europe's"],
+    rollingWord: "Support",
+    rollingOptions: ["Support"],
   },
 }
 

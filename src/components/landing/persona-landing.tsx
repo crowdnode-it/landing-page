@@ -33,10 +33,10 @@ type PersonaCSSVars = CSSProperties & {
 }
 
 const navItems = [
-  { label: "Who we are", href: "#who-we-are" },
   { label: "StartKit", href: "#startkit" },
   { label: "Secondary Market", href: "#secondary-market" },
   { label: "After Investment", href: "#after-investment" },
+  { label: "Who we are", href: "#who-we-are" },
 ]
 
 
@@ -47,9 +47,9 @@ const displayClass: Record<DisplayStyle, string> = {
 }
 
 const heroTitleSizeClass: Record<DisplayStyle, string> = {
-  serif: "text-[clamp(2.4rem,5.8vw,4.8rem)]/[1.05]",
-  inter: "text-[clamp(2.4rem,5.8vw,4.8rem)]/[1.05]",
-  space: "text-[clamp(2.4rem,5.8vw,4.8rem)]/[1.05]",
+  serif: "text-[clamp(2.55rem,5.8vw,4.8rem)]/[1.05]",
+  inter: "text-[clamp(2.55rem,5.8vw,4.8rem)]/[1.05]",
+  space: "text-[clamp(2.55rem,5.8vw,4.8rem)]/[1.05]",
 }
 
 const sectionIds = ["startkit", "secondary-market", "after-investment"]
@@ -68,6 +68,36 @@ function buildPalette(theme: PersonaTheme): GraphicPalette {
     mode: dark ? "dark" : "light",
     lineColors: theme.lineColors,
   }
+}
+
+function hexToRgb(hex: string) {
+  const normalized = hex.replace("#", "")
+
+  if (normalized.length !== 6) {
+    return null
+  }
+
+  const value = Number.parseInt(normalized, 16)
+
+  if (Number.isNaN(value)) {
+    return null
+  }
+
+  return {
+    r: (value >> 16) & 255,
+    g: (value >> 8) & 255,
+    b: value & 255,
+  }
+}
+
+function withAlpha(hex: string, alpha: number) {
+  const rgb = hexToRgb(hex)
+
+  if (!rgb) {
+    return hex
+  }
+
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`
 }
 
 function RichBody({ text }: { text: string }) {
@@ -210,7 +240,10 @@ function Eyebrow({ children, center = false }: { children: ReactNode; center?: b
 
 function Nav({ theme }: { theme: PersonaTheme }) {
   return (
-    <NavWrapper>
+    <NavWrapper
+      background={withAlpha(theme.colors.bg, theme.dark ? 0.88 : 0.92)}
+      border={withAlpha(theme.colors.ink, theme.dark ? 0.12 : 0.14)}
+    >
       <header className="mx-auto grid w-full min-w-0 max-w-[1440px] grid-cols-[1fr_auto] items-center gap-6 px-6 py-5 sm:px-10 lg:grid-cols-[1fr_auto_1fr] lg:px-16 xl:px-[88px]">
         <ParityMark href="#hero" />
         <nav className="hidden items-center gap-8 lg:flex">
@@ -287,7 +320,7 @@ function Hero({
             >
               <HeroTitle theme={theme} />
             </h1>
-            <p className="mx-auto mt-8 max-w-[500px] text-[1.08rem] font-medium leading-[1.7] text-[color-mix(in_srgb,var(--p-ink)_82%,var(--p-ink-soft))] lg:mx-0">
+            <p className="mx-auto mt-8 max-w-[500px] whitespace-pre-line text-[1.08rem] font-medium leading-[1.7] text-[color-mix(in_srgb,var(--p-ink)_82%,var(--p-ink-soft))] lg:mx-0">
               {theme.subtitle}
             </p>
             <div className="mx-auto mt-9 w-full max-w-xl lg:mx-0">
@@ -553,7 +586,6 @@ export function PersonaLanding({
           theme={theme}
           initialWaitlistSubmitted={initialWaitlistSubmitted}
         />
-        <Founders />
 
         {theme.sections.map((section, index) => (
           <FeatureSection
@@ -564,6 +596,7 @@ export function PersonaLanding({
             id={sectionIds[index] ?? section.label.toLowerCase()}
           />
         ))}
+        <Founders />
         <ClosingCTA theme={theme} />
       </main>
       <Footer theme={theme} />
