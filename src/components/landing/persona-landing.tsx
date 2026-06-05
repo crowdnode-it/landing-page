@@ -1,19 +1,14 @@
 import Link from "next/link"
-import { ArrowLeftRight, Layers3, TrendingUp } from "lucide-react"
-import type { CSSProperties, ReactNode } from "react"
+import { ArrowLeftRight, ArrowRight, BadgeEuro, ChevronDown, FileText, Landmark, LockKeyhole, Scale, Users } from "lucide-react"
+import type { CSSProperties } from "react"
 
 import { CTAButton } from "@/components/landing/cta-button"
-import { PhoneScrollPreview } from "@/components/landing/phone-scroll-preview"
 import { HashScroll } from "@/components/landing/hash-scroll"
 import { NavWrapper } from "@/components/landing/nav-wrapper"
 import { WaitlistForm } from "@/components/landing/waitlist-form"
-import { RotatingText } from "@/components/landing/rotating-text"
-import { StartKit } from "@/components/graphics/start-kit"
-import { AfterInvestment } from "@/components/graphics/after-investment"
-import { SecondaryMarket } from "@/components/graphics/secondary-market"
-import type { GraphicPalette } from "@/components/graphics/types"
+import { ValueProps } from "@/components/landing/value-props"
 import { cn } from "@/lib/utils"
-import type { DisplayStyle, PersonaSection, PersonaTheme, VisualVariant } from "@/lib/personas"
+import type { PersonaTheme } from "@/lib/personas"
 import { PageAnalytics } from "@/components/analytics/page-analytics"
 
 type PersonaCSSVars = CSSProperties & {
@@ -33,42 +28,11 @@ type PersonaCSSVars = CSSProperties & {
 }
 
 const navItems = [
-  { label: "StartKit", href: "#startkit" },
-  { label: "Secondary Market", href: "#secondary-market" },
-  { label: "After Investment", href: "#after-investment" },
+  { label: "How it works", href: "#value" },
   { label: "Who we are", href: "#who-we-are" },
+  { label: "Get access", href: "#join" },
 ]
 
-
-const displayClass: Record<DisplayStyle, string> = {
-  serif: "font-sans",
-  inter: "font-sans",
-  space: "font-sans",
-}
-
-const heroTitleSizeClass: Record<DisplayStyle, string> = {
-  serif: "text-[clamp(2.55rem,5.8vw,4.8rem)]/[1.05]",
-  inter: "text-[clamp(2.55rem,5.8vw,4.8rem)]/[1.05]",
-  space: "text-[clamp(2.55rem,5.8vw,4.8rem)]/[1.05]",
-}
-
-const sectionIds = ["startkit", "secondary-market", "after-investment"]
-
-function buildPalette(theme: PersonaTheme): GraphicPalette {
-  const dark = !!theme.dark
-  return {
-    background: theme.colors.bg,
-    text: theme.colors.ink,
-    accent: theme.colors.accent,
-    muted: theme.colors.inkMute,
-    panelStroke: theme.colors.inkLine,
-    panelFill: theme.colors.surface,
-    chipFill: dark ? "rgba(255,255,255,0.04)" : "#ffffff",
-    barDark: dark ? "rgba(255,255,255,0.13)" : "#dfe2e8",
-    mode: dark ? "dark" : "light",
-    lineColors: theme.lineColors,
-  }
-}
 
 function hexToRgb(hex: string) {
   const normalized = hex.replace("#", "")
@@ -98,22 +62,6 @@ function withAlpha(hex: string, alpha: number) {
   }
 
   return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`
-}
-
-function RichBody({ text }: { text: string }) {
-  return text.split("\n\n").map((para, i) => (
-    <p key={i} className={i > 0 ? "mt-4" : undefined}>
-      {para.split(/(\*\*[^*]+\*\*)/).map((seg, j) =>
-        seg.startsWith("**") && seg.endsWith("**") ? (
-          <strong key={j} className="font-semibold text-[var(--p-ink)]">
-            {seg.slice(2, -2)}
-          </strong>
-        ) : (
-          seg
-        )
-      )}
-    </p>
-  ))
 }
 
 function themeVars(theme: PersonaTheme): PersonaCSSVars {
@@ -155,7 +103,7 @@ function AccentLine({
     const accented = accents.has(normalizeWord(part))
 
     return (
-      <span key={`${part}-${index}`} className={accented ? "text-[var(--p-accent)]" : undefined}>
+      <span key={`${part}-${index}`} className={accented ? "bsp-serif text-[var(--p-accent)]" : undefined}>
         {part}
       </span>
     )
@@ -163,49 +111,15 @@ function AccentLine({
 }
 
 function HeroTitle({ theme }: { theme: PersonaTheme }) {
-  const rollingLineIndex = theme.title.findIndex((line) =>
-    line.split(/\s+/).some((word) => normalizeWord(word) === normalizeWord(theme.rollingWord))
-  )
-  const lines: ReactNode[] = []
-
-  for (let lineIndex = 0; lineIndex < theme.title.length; lineIndex += 1) {
-    const line = theme.title[lineIndex]
-
-    if (lineIndex !== rollingLineIndex) {
-      lines.push(
+  return (
+    <>
+      {theme.title.map((line) => (
         <span key={line} className="block text-balance">
-          {line}
+          <AccentLine line={line} accentWords={theme.titleAccentWords} />
         </span>
-      )
-      continue
-    }
-
-    const restOfLine = line
-      .split(/\s+/)
-      .filter((word) => normalizeWord(word) !== normalizeWord(theme.rollingWord))
-      .join(" ")
-    const nextLine = theme.title[lineIndex + 1]
-    const balancedLine = [restOfLine, nextLine].filter(Boolean).join(" ")
-
-    lines.push(
-      <span key={`${line}-rolling`} className="block text-[var(--p-accent)]">
-        <RotatingText words={theme.rollingOptions} />
-      </span>
-    )
-
-    if (balancedLine) {
-      lines.push(
-        <span key={`${line}-balanced`} className="block text-balance">
-          {balancedLine}
-        </span>
-      )
-      if (nextLine) {
-        lineIndex += 1
-      }
-    }
-  }
-
-  return <>{lines}</>
+      ))}
+    </>
+  )
 }
 
 function ParityMark({ size = "default", href }: { size?: "default" | "small"; href: string }) {
@@ -213,7 +127,7 @@ function ParityMark({ size = "default", href }: { size?: "default" | "small"; hr
     <Link
       href={href}
       className={cn(
-        "inline-flex items-center gap-2 font-sans font-bold uppercase tracking-[0.08em] text-[var(--p-ink)]",
+        "inline-flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.025em] text-[var(--p-ink)]",
         size === "small" ? "text-xs" : "text-sm"
       )}
     >
@@ -223,28 +137,13 @@ function ParityMark({ size = "default", href }: { size?: "default" | "small"; hr
   )
 }
 
-function Eyebrow({ children, center = false }: { children: ReactNode; center?: boolean }) {
-  return (
-    <div
-      className={cn(
-        "flex items-center gap-2.5 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-[var(--p-accent)]",
-        center && "justify-center"
-      )}
-    >
-      <span className="size-1.5 rounded-full bg-[var(--p-accent)] opacity-60" />
-      <span>{children}</span>
-    </div>
-  )
-}
-
-
 function Nav({ theme }: { theme: PersonaTheme }) {
   return (
     <NavWrapper
       background={withAlpha(theme.colors.bg, theme.dark ? 0.88 : 0.92)}
       border={withAlpha(theme.colors.ink, theme.dark ? 0.12 : 0.14)}
     >
-      <header className="mx-auto grid w-full min-w-0 max-w-[1440px] grid-cols-[1fr_auto] items-center gap-6 px-6 py-5 sm:px-10 lg:grid-cols-[1fr_auto_1fr] lg:px-16 xl:px-[88px]">
+      <header className="mx-auto grid h-16 w-full min-w-0 max-w-[1440px] grid-cols-[1fr_auto] items-center gap-6 px-6 sm:px-10 md:h-20 lg:grid-cols-[1fr_auto_1fr] lg:px-16 xl:px-[88px]">
         <ParityMark href="#hero" />
         <nav className="hidden items-center gap-8 lg:flex">
           {navItems.map((item) => (
@@ -253,7 +152,7 @@ function Nav({ theme }: { theme: PersonaTheme }) {
               href={item.href}
               data-track-nav={item.href.replace("#", "")}
               data-track-nav-type="top_desktop"
-              className="text-sm font-medium [letter-spacing:-0.02em] text-[var(--p-ink-soft)] transition-colors hover:text-[var(--p-ink)]"
+              className="text-[16px]/[1.3] font-medium tracking-[-0.02em] text-[var(--p-ink-soft)] transition-colors hover:text-[var(--p-ink)]"
             >
               {item.label}
             </a>
@@ -268,141 +167,109 @@ function Nav({ theme }: { theme: PersonaTheme }) {
 }
 
 
-function PersonaGraphic({ variant, theme }: { variant: VisualVariant; theme: PersonaTheme }) {
-  const palette = buildPalette(theme)
-  const isSquare = variant === "portfolio"
-  const artW = isSquare ? 1254 : 1448
-  const artH = isSquare ? 1254 : 1086
-
-  const graphic =
-    variant === "portfolio" ? (
-      <StartKit palette={palette} />
-    ) : variant === "orderbook" ? (
-      <SecondaryMarket palette={palette} />
-    ) : variant === "chart" ? (
-      <AfterInvestment palette={palette} />
-    ) : null
-
-  if (!graphic) return null
-
+function Hero({ theme }: { theme: PersonaTheme }) {
   return (
-    <div className="relative">
-      <div className="absolute inset-0 rounded-2xl opacity-40 blur-[55px]" style={{ background: `var(--p-accent)` }} />
-      <div className="relative w-full overflow-hidden rounded-2xl">
-        {graphic}
-      </div>
-    </div>
-  )
-}
+    <section
+      id="hero"
+      data-section="hero"
+      className="relative grid min-h-svh place-items-center overflow-hidden bg-[var(--p-bg)] px-6 pb-48 pt-28 text-center sm:px-10 lg:px-16 lg:pb-36 xl:px-[88px]"
+    >
+      <div className="pointer-events-none absolute left-1/2 top-[45%] size-[min(900px,126vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--p-accent)_24%,transparent)_0%,color-mix(in_srgb,var(--p-accent)_10%,transparent)_32%,transparent_66%)] blur-2xl" />
+      <div className="relative mx-auto flex w-full max-w-[1180px] flex-col items-center">
+        <h1 className="bsp-display mx-auto max-w-[1080px] overflow-visible text-[var(--p-ink)]">
+          <HeroTitle theme={theme} />
+        </h1>
+        <p className="bsp-body mx-auto mt-8 max-w-[720px] text-[color-mix(in_srgb,var(--p-ink)_84%,var(--p-ink-soft))] md:mt-10">
+          {theme.subtitle}
+        </p>
 
-function Hero({
-  theme,
-  initialWaitlistSubmitted = false,
-}: {
-  theme: PersonaTheme
-  initialWaitlistSubmitted?: boolean
-}) {
-  return (
-    <section id="hero" data-section="hero" className="relative bg-[var(--p-bg)] px-6 pb-12 pt-24 sm:px-10 sm:pt-28 lg:px-16 lg:pb-16 lg:pt-32 xl:px-[88px]">
-      {theme.dark ? (
-        <div className="pointer-events-none absolute -right-44 -top-56 size-[680px] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--p-accent)_22%,transparent)_0%,transparent_62%)]" />
-      ) : null}
-      <div className="mx-auto w-full max-w-[1440px]">
-
-        <div className="grid min-w-0 grid-cols-1 items-center gap-8 lg:grid-cols-[1.32fr_0.88fr] xl:gap-14">
-          <div className="flex min-w-0 flex-col items-center text-center lg:items-start lg:text-left">
-            <h1
-              className={cn(
-                "mx-auto max-w-[800px] overflow-hidden text-balance font-black text-[var(--p-ink)] [letter-spacing:-0.04em] [line-height:1.05] lg:mx-0",
-                heroTitleSizeClass[theme.display],
-                displayClass[theme.display]
-              )}
-            >
-              <HeroTitle theme={theme} />
-            </h1>
-            <p className="mx-auto mt-8 max-w-[500px] whitespace-pre-line text-[1.08rem] font-medium leading-[1.7] text-[color-mix(in_srgb,var(--p-ink)_82%,var(--p-ink-soft))] lg:mx-0">
-              {theme.subtitle}
-            </p>
-            <div className="mx-auto mt-9 w-full max-w-xl lg:mx-0">
-              <WaitlistForm
-                persona={theme.key}
-                formLocation="hero"
-                initialSubmitted={initialWaitlistSubmitted}
-              />
-            </div>
-          </div>
-          <div className="relative flex min-w-0 justify-center overflow-visible [zoom:0.75]">
-            <div className="absolute -inset-8 rounded-3xl opacity-25 blur-[60px]" style={{ background: `var(--p-accent)` }} />
-            <div className="relative inline-flex">
-              <PhoneScrollPreview theme={theme} />
-              {/* Floating stat cards */}
-              <div
-                className="absolute -left-10 top-[18%] z-10 rounded-2xl border border-[var(--p-ink-line)] px-4 py-3 sm:-left-24 sm:px-4 sm:py-3 lg:-left-36 lg:px-5 lg:py-4"
-                style={{
-                  background: "color-mix(in srgb, var(--p-bg) 80%, transparent)",
-                  backdropFilter: "blur(16px)",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
-                }}
-              >
-                <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--p-ink-mute)] sm:text-[10px] sm:tracking-[0.14em] lg:text-[12px] lg:tracking-[0.16em]">Exit</div>
-                <div className="mt-1.5 font-sans text-2xl font-extrabold leading-none [letter-spacing:-0.03em] text-[var(--p-ink)] lg:text-3xl">When you choose</div>
-              </div>
-              <div
-                className="absolute -right-4 top-[42%] z-10 rounded-2xl border border-[var(--p-ink-line)] px-4 py-3 sm:-right-14 sm:px-4 sm:py-3 lg:-right-20 lg:px-5 lg:py-4"
-                style={{
-                  background: "color-mix(in srgb, var(--p-bg) 80%, transparent)",
-                  backdropFilter: "blur(16px)",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
-                }}
-              >
-                <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--p-ink-mute)] sm:text-[10px] sm:tracking-[0.14em] lg:text-[12px] lg:tracking-[0.16em]">EU-regulated</div>
-                <div className="mt-1.5 font-sans text-2xl font-extrabold leading-none [letter-spacing:-0.03em] text-[var(--p-ink)] lg:text-3xl">Real equity</div>
-              </div>
-              <div
-                className="absolute -left-4 bottom-[14%] z-10 rounded-2xl border border-[var(--p-ink-line)] px-4 py-3 sm:-left-10 sm:px-4 sm:py-3 lg:-left-16 lg:px-5 lg:py-4"
-                style={{
-                  background: "color-mix(in srgb, var(--p-bg) 80%, transparent)",
-                  backdropFilter: "blur(16px)",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
-                }}
-              >
-                <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--p-ink-mute)] sm:text-[10px] sm:tracking-[0.14em] lg:text-[12px] lg:tracking-[0.16em]">From</div>
-                <div className="mt-1.5 font-sans text-2xl font-extrabold leading-none [letter-spacing:-0.03em] text-[var(--p-ink)] lg:text-3xl">€200</div>
-              </div>
-            </div>
-          </div>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <a
+            href="#join"
+            data-track-nav="join"
+            data-track-nav-type="hero_primary"
+            className="bsp-pill border-transparent bg-[var(--p-cta-bg)] text-[var(--p-cta-text)] hover:opacity-90 active:scale-[0.98]"
+          >
+            <span>Invest</span>
+            <ArrowRight className="size-4" />
+          </a>
+          <a
+            href="#value"
+            data-track-nav="value"
+            data-track-nav-type="hero_secondary"
+            className="bsp-pill show-more-motion border-[color-mix(in_srgb,var(--p-accent)_60%,transparent)] text-[var(--p-ink)] hover:border-[var(--p-accent)] hover:bg-[color-mix(in_srgb,var(--p-accent)_12%,transparent)]"
+          >
+            <span>Show more</span>
+            <ChevronDown className="size-4" />
+          </a>
         </div>
 
       </div>
+      <TrustCarousel className="absolute inset-x-0 bottom-24 z-10 sm:bottom-28 lg:bottom-0" />
     </section>
   )
 }
 
 
 const founders = [
-  { name: "Antonio De Cinque", role: "Product & Design", initials: "AD", photo: "/founders/antonio.jpeg", linkedin: "https://www.linkedin.com/in/antonio-de-cinque/", desc: "Software Dev Engineer at Amazon Luxembourg, with a Master's in Computer Engineering from Politecnico di Torino. Antonio brings a passion for product vision and crafting experiences that are both functional and beautifully designed." },
-  { name: "Bruno Carchia", role: "Strategy & Operations", initials: "BC", photo: "/founders/bruno.jpeg", linkedin: "https://www.linkedin.com/in/bruno-carchia/", desc: "AI and Data Analytics graduate from Politecnico di Torino and KTH Royal Institute of Technology. Currently based in Stockholm, Bruno works as a Software Engineer at Visa while driving the overall organization and technical execution of Parity." },
-  { name: "Matteo Camellini", role: "AI & Engineering", initials: "MC", photo: "/founders/matteo.jpg", linkedin: "https://www.linkedin.com/in/matteo-camellini-209a28244/", desc: "With a Bachelor's in Computer Engineering from Politecnico di Milano, Matteo is currently pursuing a Master's in Data Science and Machine Learning at KTH. His interests span neural network architectures, quantitative finance and DJing." },
-  { name: "Giangiacomo Zanni", role: "Finance & Markets", initials: "GZ", photo: null, linkedin: "https://www.linkedin.com/in/giangiacomo-zanni/", desc: "Giangiacomo brings expertise in structured finance and data-driven decision making, with a track record in portfolio management at BNP Paribas Asset Management backed by an ESCP MiM with specializations in AI and Applied Data Science." },
+  { name: "Antonio De Cinque", role: "Product & Design", initials: "AD", photo: "/founders/antonio.jpeg", linkedin: "https://www.linkedin.com/in/antonio-de-cinque/", phrase: "Turns product vision into experiences that feel functional and beautiful." },
+  { name: "Bruno Carchia", role: "Strategy & Operations", initials: "BC", photo: "/founders/bruno.jpeg", linkedin: "https://www.linkedin.com/in/bruno-carchia/", phrase: "Drives Parity's organization and technical execution from Stockholm." },
+  { name: "Matteo Camellini", role: "AI & Engineering", initials: "MC", photo: "/founders/matteo.jpg", linkedin: "https://www.linkedin.com/in/matteo-camellini-209a28244/", phrase: "Builds the models behind the markets, from neural nets to quant finance." },
+  { name: "Giangiacomo Zanni", role: "Finance & Markets", initials: "GZ", photo: null, linkedin: "https://www.linkedin.com/in/giangiacomo-zanni/", phrase: "Brings structured-finance discipline from BNP Paribas Asset Management." },
 ]
+
+const trustMarks = [
+  { label: "€200 minimum", Icon: BadgeEuro },
+  { label: "MiFID II framework", Icon: Scale },
+  { label: "EU-regulated real equity", Icon: Landmark },
+  { label: "Segregated custody", Icon: LockKeyhole },
+  { label: "Exit when you choose", Icon: ArrowLeftRight },
+  { label: "Transparent reporting", Icon: FileText },
+]
+
+function TrustCarousel({ className }: { className?: string }) {
+  const marks = [...trustMarks, ...trustMarks, ...trustMarks]
+
+  return (
+    <div className={cn("border-y border-[var(--p-ink-line)] bg-[color-mix(in_srgb,var(--p-surface)_24%,transparent)] px-0", className)} aria-label="Trust indicators">
+      <div className="overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
+        <div className="trust-carousel-track flex w-max items-center gap-10 px-8 py-4 sm:gap-14">
+          {marks.map(({ label, Icon }, index) => (
+            <div
+              key={`${label}-${index}`}
+              className="flex shrink-0 items-center gap-3"
+            >
+              <Icon className="size-[22px] shrink-0 text-[var(--p-accent)]" />
+              <span className="bsp-mono-label whitespace-nowrap text-[12px] uppercase text-[var(--p-ink-soft)]">
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function Founders() {
   return (
-    <section id="who-we-are" data-section="who-we-are" className="scroll-mt-0 border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-12 sm:px-10 lg:px-16 lg:py-16 xl:px-[88px]">
+    <section id="who-we-are" data-section="who-we-are" className="scroll-mt-0 border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-20 sm:px-10 md:py-[7.5rem] lg:px-16 xl:px-[88px]">
       <div className="mx-auto max-w-[1440px]">
-        <h2 className="font-sans text-[clamp(1.8rem,3.2vw,2.5rem)]/[1.12] font-extrabold text-[var(--p-ink)] [letter-spacing:-0.03em]">
-          Who we are
-        </h2>
-        <p className="mt-4 text-[0.95rem] leading-[1.7] text-[var(--p-ink-soft)]">
-          Four founders building the infrastructure for accessible private-market investing in Europe.
-        </p>
-        <div className="mt-14 grid grid-cols-2 gap-8 sm:gap-12 lg:grid-cols-4">
+        <div className="max-w-3xl">
+          <h2 className="bsp-section-title text-[var(--p-ink)]">
+            Who we are
+          </h2>
+          <p className="bsp-section-subtitle mt-4 max-w-2xl text-[var(--p-ink-soft)]">
+            Four founders building accessible private markets.
+          </p>
+        </div>
+        <div className="mt-16 grid grid-cols-2 gap-8 sm:gap-12 lg:grid-cols-4 lg:gap-10">
           {founders.map((f) => (
             <div
               key={f.initials}
-              className="group flex flex-col items-start text-left lg:items-center lg:text-center"
+              className="group flex flex-col items-start text-left"
             >
-              <div className="mb-5 size-24 overflow-hidden rounded-full border border-[var(--p-ink-line)] transition-colors group-hover:border-[var(--p-accent)] sm:size-28">
+              <div className="mb-5 size-[88px] overflow-hidden rounded-full border border-[var(--p-ink-line)] bg-[var(--p-surface)] transition-colors group-hover:border-[var(--p-accent)] sm:size-24">
                 {f.photo ? (
                   <img src={f.photo} alt={f.name} className="size-full object-cover" />
                 ) : (
@@ -411,9 +278,9 @@ function Founders() {
                   </div>
                 )}
               </div>
-              <div className="font-sans text-[15px] font-semibold text-[var(--p-ink)]">{f.name}</div>
-              <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--p-ink-mute)]">{f.role}</div>
-              <div className="mt-3 text-[13px] leading-[1.6] text-[var(--p-ink-soft)]">{f.desc}</div>
+              <div className="text-[17px]/[1.3] font-medium tracking-[-0.02em] text-[var(--p-ink)]">{f.name}</div>
+              <div className="bsp-mono-label mt-1 text-[11px] uppercase text-[var(--p-ink-mute)]">{f.role}</div>
+              <div className="mt-3 text-[14px]/[1.3] tracking-[-0.02em] text-[var(--p-ink-soft)]">{f.phrase}</div>
             </div>
           ))}
         </div>
@@ -422,68 +289,18 @@ function Founders() {
   )
 }
 
-function FeatureSection({
+function ClosingCTA({
   theme,
-  section,
-  flip,
-  id,
+  initialWaitlistSubmitted = false,
 }: {
   theme: PersonaTheme
-  section: PersonaSection
-  flip: boolean
-  id: string
+  initialWaitlistSubmitted?: boolean
 }) {
-  return (
-    <section
-      id={id}
-      data-section={id}
-      className="relative scroll-mt-0 overflow-hidden border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-16 sm:px-10 lg:px-16 lg:py-24 xl:px-[88px]"
-    >
-      <div
-        className={cn(
-          "pointer-events-none absolute top-14 text-[160px] font-black leading-none text-[var(--p-ink)] opacity-[0.025] sm:text-[220px]",
-          displayClass[theme.display],
-          flip ? "right-4" : "left-4"
-        )}
-      >
-        {section.num}
-      </div>
-      <div
-        className={cn(
-          "relative mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-12 lg:gap-20",
-          flip ? "lg:grid-cols-[1fr_1.05fr]" : "lg:grid-cols-[1.05fr_1fr]"
-        )}
-      >
-        <div className={cn("max-w-xl", flip && "lg:order-2")}>
-          <Eyebrow>
-            {section.num} / {section.label}
-          </Eyebrow>
-          <h2
-            className={cn(
-              "mt-8 text-[clamp(1.8rem,3.2vw,2.5rem)]/[1.12] font-extrabold text-[var(--p-ink)] [letter-spacing:-0.03em]",
-              displayClass[theme.display]
-            )}
-          >
-            {section.title}
-          </h2>
-          <div className="mt-7 text-[0.95rem] font-normal leading-[1.7] text-[var(--p-ink-soft)]">
-            <RichBody text={section.body} />
-          </div>
-        </div>
-        <div className={cn("min-w-0", flip && "lg:order-1")}>
-          <PersonaGraphic variant={section.variant} theme={theme} />
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function ClosingCTA({ theme }: { theme: PersonaTheme }) {
   return (
     <section
       id="join"
       data-section="join"
-      className="relative scroll-mt-0 overflow-hidden bg-[var(--p-bg-alt)] px-6 py-16 text-center sm:px-10 lg:px-16 lg:py-24 xl:px-[88px]"
+      className="relative scroll-mt-0 overflow-hidden bg-[var(--p-bg-alt)] px-6 py-20 text-center sm:px-10 md:py-[7.5rem] lg:px-16 xl:px-[88px]"
     >
       {theme.dark ? (
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_85%,color-mix(in_srgb,var(--p-accent)_28%,transparent)_0%,transparent_62%)]" />
@@ -492,12 +309,7 @@ function ClosingCTA({ theme }: { theme: PersonaTheme }) {
         <div className="mb-9 flex justify-center">
           <ParityMark size="small" href="#hero" />
         </div>
-        <h2
-          className={cn(
-            "text-[clamp(2.4rem,5.8vw,4.8rem)]/[1.05] font-black text-[var(--p-ink)] [letter-spacing:-0.04em]",
-            displayClass[theme.display]
-          )}
-        >
+        <h2 className="bsp-display text-[var(--p-ink)]">
           {theme.closingTitle.map((line, index) => (
             <span key={line} className="block">
               {index === theme.closingTitle.length - 1 ? (
@@ -508,11 +320,16 @@ function ClosingCTA({ theme }: { theme: PersonaTheme }) {
             </span>
           ))}
         </h2>
-        <p className="mx-auto mt-8 max-w-[460px] text-[0.95rem] font-normal leading-[1.75] text-[var(--p-ink-mute)]">
+        <p className="bsp-body mx-auto mt-8 max-w-[520px] text-[var(--p-ink-mute)]">
           {theme.closingSub}
         </p>
         <div className="mt-10">
-          <WaitlistForm centered persona={theme.key} formLocation="closing" />
+          <WaitlistForm
+            centered
+            persona={theme.key}
+            formLocation="closing"
+            initialSubmitted={initialWaitlistSubmitted}
+          />
         </div>
       </div>
     </section>
@@ -535,9 +352,9 @@ function Footer({ theme }: { theme: PersonaTheme }) {
 }
 
 const mobileNavItems = [
-  { label: "Start\nKit", href: "#startkit", Icon: Layers3 },
-  { label: "Secondary\nMarket", href: "#secondary-market", Icon: ArrowLeftRight },
-  { label: "After\nInvestment", href: "#after-investment", Icon: TrendingUp },
+  { label: "How it\nworks", href: "#value", Icon: BadgeEuro },
+  { label: "Who\nwe are", href: "#who-we-are", Icon: Users },
+  { label: "Invest", href: "#join", Icon: ArrowRight },
 ]
 
 function MobileBottomNav() {
@@ -558,7 +375,7 @@ function MobileBottomNav() {
             )}
           >
             <Icon className="size-[18px]" />
-            <span className="whitespace-pre-line text-center font-mono text-[10px] font-medium leading-tight uppercase tracking-[0.1em]">
+            <span className="bsp-mono-label whitespace-pre-line text-center text-[10px] leading-tight uppercase">
               {label}
             </span>
           </a>
@@ -582,22 +399,13 @@ export function PersonaLanding({
       <HashScroll />
       <Nav theme={theme} />
       <main className="overflow-x-hidden">
-        <Hero
+        <Hero theme={theme} />
+        <ValueProps persona={theme.key} />
+        <Founders />
+        <ClosingCTA
           theme={theme}
           initialWaitlistSubmitted={initialWaitlistSubmitted}
         />
-
-        {theme.sections.map((section, index) => (
-          <FeatureSection
-            key={section.num}
-            theme={theme}
-            section={section}
-            flip={index % 2 === 1}
-            id={sectionIds[index] ?? section.label.toLowerCase()}
-          />
-        ))}
-        <Founders />
-        <ClosingCTA theme={theme} />
       </main>
       <Footer theme={theme} />
       <MobileBottomNav />

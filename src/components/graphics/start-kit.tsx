@@ -93,7 +93,7 @@ export function StartKit({ palette }: { palette: GraphicPalette }) {
   const muted = p.muted
   const accent = p.accent
 
-  const mono = '"JetBrains Mono", monospace'
+  const mono = "var(--font-fragment-mono), ui-monospace, monospace"
   const ls = "0.18em"
 
   /* Card grid constants */

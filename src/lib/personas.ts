@@ -53,6 +53,9 @@ export type PersonaTheme = {
   rollingOptions: string[]
 }
 
+const GLOBAL_SUBTITLE =
+  "Access elite European startup equity for as little as €200. Parity gives you the freedom to trade your stake on your terms, backed by transparent reporting and a community of active investors."
+
 const SECTION_SECONDARY_BODY =
   "Every other startup investment comes with the same fine print: **see you in a decade**. We took that part out.\n\nList your stake on the secondary market and let another investor pick it up, or browse rounds that have already closed and buy in from someone exiting early.\n\nTrades settle on a blockchain, which in practice means: when someone buys your shares, the transfer is **final, instant, and visible** to both of you. No back-office, no paperwork, no waiting."
 
@@ -92,11 +95,11 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
       ctaText: "#0C2222",
     },
     eyebrow: "For people who fund ideas",
-    title: ["Support the next great startup now."],
-    titleAccentWords: ["startup"],
-    subtitle: "Real equity.\nReal legal rights.\nBuilt under UE rules.",
-    cta: "Join the Waitlist",
-    ctaSecondary: "How it works",
+    title: ["Want to own a piece of what your friends are building?"],
+    titleAccentWords: ["friends"],
+    subtitle: GLOBAL_SUBTITLE,
+    cta: "Invest",
+    ctaSecondary: "Show more",
     personaNote:
       "For experts who want to back technology they understand, follow the work closely, and help the right communities form around it.",
     proofPoints: ["Deep project detail", "Founder updates", "Sector communities"],
@@ -126,11 +129,11 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
         variant: "chart",
       },
     ],
-    closingTitle: ["The next startup you", "believe in is waiting."],
-    closingSub: "Be there at €200. Stay as long as you want. Sell when you choose.",
+    closingTitle: ["Own a real stake", "from €200."],
+    closingSub: "Join the waitlist for early access to startup equity, transparent updates, and secondary-market liquidity.",
     closingCta: "Join the Waitlist",
     lineColors: ["#D4A373", "#7FB6A8", "#B393C9", "#E3935F"],
-    rollingWord: "Support",
+    rollingWord: "piece",
     rollingOptions: ["Support"],
   },
   johann: {
@@ -154,11 +157,11 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
       ctaText: "#F0F2F5",
     },
     eyebrow: "For the smart money",
-    title: ["Support the next great startup now."],
+    title: ["Think you can spot the next great startup before the VCs do?"],
     titleAccentWords: ["startup"],
-    subtitle: "Real equity.\nReal legal rights.\nBuilt under UE rules.",
-    cta: "Join the Waitlist",
-    ctaSecondary: "See the thesis",
+    subtitle: GLOBAL_SUBTITLE,
+    cta: "Invest",
+    ctaSecondary: "Show more",
     personaNote:
       "For investors who want the discipline, portfolio logic, and status of private markets without the traditional entry ticket.",
     proofPoints: ["Portfolio construction", "Direct founder signal", "A way out"],
@@ -188,11 +191,11 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
         variant: "chart",
       },
     ],
-    closingTitle: ["The next startup you", "believe in is waiting."],
-    closingSub: "Real equity. EU-regulated. From €200. Exit when you choose.",
+    closingTitle: ["Own a real stake", "from €200."],
+    closingSub: "Join the waitlist for early access to startup equity, transparent updates, and secondary-market liquidity.",
     closingCta: "Join the Waitlist",
     lineColors: ["#a61b24", "#e07a86", "#9b5fa3", "#e07e3a"],
-    rollingWord: "Support",
+    rollingWord: "startup",
     rollingOptions: ["Support"],
   },
   bob: {
@@ -217,11 +220,11 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
       ctaText: "#080C14",
     },
     eyebrow: "Live now - Europe's new rounds",
-    title: ["Support the next great startup now."],
-    titleAccentWords: ["startup"],
-    subtitle: "Real equity.\nReal legal rights.\nBuilt under UE rules.",
-    cta: "Join the Waitlist",
-    ctaSecondary: "What's hot",
+    title: ["Want a seat at the table for closed-door funding rounds?"],
+    titleAccentWords: ["seat"],
+    subtitle: GLOBAL_SUBTITLE,
+    cta: "Invest",
+    ctaSecondary: "Show more",
     personaNote:
       "For impulse-led investors who want social proof, fresh rounds, visible momentum, and a clear signal that something is happening now.",
     proofPoints: ["Trending rounds", "Live market pulse", "Instant ownership"],
@@ -254,11 +257,11 @@ export const personas: Record<PersonaKey, PersonaTheme> = {
         variant: "chart",
       },
     ],
-    closingTitle: ["The next 100x startup", "is one tap away."],
-    closingSub: "€200 gets you in. The next round closes in 3 days.",
+    closingTitle: ["Own a real stake", "from €200."],
+    closingSub: "Join the waitlist for early access to startup equity, transparent updates, and secondary-market liquidity.",
     closingCta: "Join the Waitlist",
     lineColors: ["#FF5470", "#FF8FA8", "#B58CFF", "#FF9647"],
-    rollingWord: "Support",
+    rollingWord: "seat",
     rollingOptions: ["Support"],
   },
 }

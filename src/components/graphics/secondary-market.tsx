@@ -84,7 +84,7 @@ export function SecondaryMarket({ palette }: { palette: GraphicPalette }) {
   const hubExitYs = [340, 530, 720, 910]
   const exitRowMap = [0, 2, 1, 3]
 
-  const fontMono = '"JetBrains Mono", monospace'
+  const fontMono = "var(--font-fragment-mono), ui-monospace, monospace"
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg">

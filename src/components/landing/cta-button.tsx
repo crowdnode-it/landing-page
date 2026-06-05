@@ -13,12 +13,11 @@ export function CTAButton({
 }) {
   return (
     <Button
-      render={<a href="#join" />}
+      render={<a href="#join" data-track-nav="join" data-track-nav-type="top_cta" />}
       nativeButton={false}
       className={cn(
-        "!h-auto rounded-full !bg-[var(--p-cta-bg)] !text-[var(--p-cta-text)] shadow-none hover:opacity-90",
-        "border border-transparent [letter-spacing:-0.005em]",
-        size === "sm" ? "px-4 py-2 text-[0.85rem] font-bold" : "px-6 py-3 text-[0.85rem] font-bold",
+        "bsp-pill !h-auto !rounded-full border-transparent !bg-[var(--p-cta-bg)] !text-[var(--p-cta-text)] shadow-none hover:opacity-90",
+        size === "sm" ? "px-3 py-2 md:px-[1.125rem] md:py-2.5" : "px-[1.125rem] py-2.5",
       )}
     >
       <span>{children}</span>

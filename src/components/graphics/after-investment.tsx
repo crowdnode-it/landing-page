@@ -23,7 +23,7 @@ export function AfterInvestment({ palette }: { palette: GraphicPalette }) {
   const muted = p.muted
   const accent = p.accent
 
-  const font = '"JetBrains Mono", monospace'
+  const font = "var(--font-fragment-mono), ui-monospace, monospace"
 
   // --- Chart calculations ---
   const chartContainerX = 88

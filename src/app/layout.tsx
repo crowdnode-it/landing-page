@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Inter, JetBrains_Mono, Source_Serif_4, Space_Grotesk } from "next/font/google";
+import { Fragment_Mono, Instrument_Sans, Instrument_Serif } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -7,8 +7,8 @@ import "./globals.css";
 // Events are always logged to the browser console regardless of this variable.
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
-const inter = Inter({
-  variable: "--font-inter",
+const instrumentSans = Instrument_Sans({
+  variable: "--font-instrument-sans",
   subsets: ["latin"],
   display: "swap",
 });
@@ -17,24 +17,14 @@ const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
   subsets: ["latin"],
   weight: "400",
+  style: ["normal", "italic"],
   display: "swap",
 });
 
-const jetBrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+const fragmentMono = Fragment_Mono({
+  variable: "--font-fragment-mono",
   subsets: ["latin"],
-  display: "swap",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const sourceSerif = Source_Serif_4({
-  variable: "--font-source-serif",
-  subsets: ["latin"],
+  weight: "400",
   display: "swap",
 });
 
@@ -51,9 +41,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${instrumentSerif.variable} ${jetBrainsMono.variable} ${spaceGrotesk.variable} ${sourceSerif.variable} h-full antialiased`}
+      className={`${instrumentSans.variable} ${instrumentSerif.variable} ${fragmentMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col text-[16px] leading-[1.65] [-webkit-font-smoothing:antialiased] [-moz-osx-font-smoothing:grayscale]">
+      <body className="min-h-full flex flex-col text-[16px] leading-[1.3] tracking-[-0.02em] [-webkit-font-smoothing:antialiased] [-moz-osx-font-smoothing:grayscale]">
         {children}
         {GA_ID && (
           <>
