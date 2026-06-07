@@ -28,9 +28,8 @@ type PersonaCSSVars = CSSProperties & {
 }
 
 const navItems = [
-  { label: "How it works", href: "#value" },
+  { label: "Value Proposition", href: "#value" },
   { label: "Who we are", href: "#who-we-are" },
-  { label: "Get access", href: "#join" },
 ]
 
 
@@ -408,7 +407,7 @@ export function PersonaLanding({
         />
       </main>
       <Footer theme={theme} />
-      <MobileBottomNav />
+      {/* <MobileBottomNav /> */}
     </div>
   )
 }

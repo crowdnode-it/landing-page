@@ -46,7 +46,7 @@ export function WaitlistForm({
     roleFilled: false,
     lastFieldTouched: null as string | null,
     touchStartTime: null as number | null,
-    submitted: false,
+    submitted: initialSubmitted,
   })
 
   // form_abandon — fires when the user leaves with a touched but unsubmitted form.
@@ -83,13 +83,6 @@ export function WaitlistForm({
       window.removeEventListener("pagehide", fireAbandon)
     }
   }, [persona, formLocation])
-
-  useEffect(() => {
-    if (initialSubmitted) {
-      formState.current.submitted = true
-      setSubmitted(true)
-    }
-  }, [initialSubmitted])
 
   function handleEmailFocus() {
     if (!formState.current.touchStartTime) {
