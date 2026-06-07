@@ -170,7 +170,7 @@ function ValueTile({
 
         <div
           className={cn(
-            "absolute inset-x-0 bottom-0 z-10 flex flex-col justify-end bg-[linear-gradient(to_bottom,transparent_0%,color-mix(in_srgb,var(--tile-card)_80%,transparent)_40px,var(--tile-card)_80px)] p-6 transition-[height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-open:justify-start md:px-10 md:py-9",
+            "absolute inset-x-0 bottom-0 z-10 flex flex-col justify-end bg-[linear-gradient(to_bottom,transparent_0%,color-mix(in_srgb,var(--tile-card)_72%,transparent)_60px,var(--tile-card)_130px)] p-6 transition-[height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-open:justify-start md:px-10 md:py-9",
             panelClass
           )}
         >
