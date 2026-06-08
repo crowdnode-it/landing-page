@@ -1,10 +1,11 @@
-import Link from "next/link"
 import { ArrowLeftRight, ArrowRight, BadgeEuro, ChevronDown, FileText, Landmark, LockKeyhole, Scale, Users } from "lucide-react"
 import type { CSSProperties } from "react"
 
 import { CTAButton } from "@/components/landing/cta-button"
 import { HashScroll } from "@/components/landing/hash-scroll"
+import { NavLink } from "@/components/landing/nav-link"
 import { NavWrapper } from "@/components/landing/nav-wrapper"
+import { ScrollTopLink } from "@/components/landing/scroll-top-link"
 import { WaitlistForm } from "@/components/landing/waitlist-form"
 import { ValueProps } from "@/components/landing/value-props"
 import { cn } from "@/lib/utils"
@@ -27,9 +28,9 @@ type PersonaCSSVars = CSSProperties & {
   "--p-stripe": string
 }
 
-const navItems = [
-  { label: "Value Proposition", href: "#value" },
-  { label: "Who we are", href: "#who-we-are" },
+const navItems: { label: string; href: string; block?: ScrollLogicalPosition; offset?: number }[] = [
+  { label: "Value Proposition", href: "#value", offset: -5 },
+  { label: "Who we are", href: "#who-we-are", block: "center" },
 ]
 
 
@@ -121,18 +122,17 @@ function HeroTitle({ theme }: { theme: PersonaTheme }) {
   )
 }
 
-function ParityMark({ size = "default", href }: { size?: "default" | "small"; href: string }) {
+function ParityMark({ size = "default" }: { size?: "default" | "small" }) {
   return (
-    <Link
-      href={href}
+    <ScrollTopLink
       className={cn(
-        "inline-flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.025em] text-[var(--p-ink)]",
+        "inline-flex cursor-pointer items-center gap-2 font-sans font-semibold uppercase tracking-[0.025em] text-[var(--p-ink)] bg-transparent border-0 p-0",
         size === "small" ? "text-xs" : "text-sm"
       )}
     >
       <span className="size-1.5 rounded-full bg-[var(--p-accent)] shadow-[0_0_18px_color-mix(in_srgb,var(--p-accent)_60%,transparent)]" />
       <span>Parity</span>
-    </Link>
+    </ScrollTopLink>
   )
 }
 
@@ -143,18 +143,20 @@ function Nav({ theme }: { theme: PersonaTheme }) {
       border={withAlpha(theme.colors.ink, theme.dark ? 0.12 : 0.14)}
     >
       <header className="mx-auto grid h-16 w-full min-w-0 max-w-[1440px] grid-cols-[1fr_auto] items-center gap-6 px-6 sm:px-10 md:h-20 lg:grid-cols-[1fr_auto_1fr] lg:px-16 xl:px-[88px]">
-        <ParityMark href="#hero" />
+        <ParityMark />
         <nav className="hidden items-center gap-8 lg:flex">
           {navItems.map((item) => (
-            <a
+            <NavLink
               key={item.href}
               href={item.href}
+              block={item.block}
+              offset={item.offset}
               data-track-nav={item.href.replace("#", "")}
               data-track-nav-type="top_desktop"
               className="text-[16px]/[1.3] font-medium tracking-[-0.02em] text-[var(--p-ink-soft)] transition-colors hover:text-[var(--p-ink)]"
             >
               {item.label}
-            </a>
+            </NavLink>
           ))}
         </nav>
         <div className="flex items-center justify-end gap-4">
@@ -183,15 +185,16 @@ function Hero({ theme }: { theme: PersonaTheme }) {
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <a
+          <NavLink
             href="#join"
+            offset={-15}
             data-track-nav="join"
             data-track-nav-type="hero_primary"
             className="bsp-pill border-transparent bg-[var(--p-cta-bg)] text-[var(--p-cta-text)] hover:opacity-90 active:scale-[0.98]"
           >
             <span>Invest</span>
             <ArrowRight className="size-4" />
-          </a>
+          </NavLink>
           <a
             href="#value"
             data-track-nav="value"
@@ -214,7 +217,7 @@ const founders = [
   { name: "Antonio De Cinque", role: "Product & Design", initials: "AD", photo: "/founders/antonio.jpeg", linkedin: "https://www.linkedin.com/in/antonio-de-cinque/", phrase: "Turns product vision into experiences that feel functional and beautiful." },
   { name: "Bruno Carchia", role: "Strategy & Operations", initials: "BC", photo: "/founders/bruno.jpeg", linkedin: "https://www.linkedin.com/in/bruno-carchia/", phrase: "Drives Parity's organization and technical execution from Stockholm." },
   { name: "Matteo Camellini", role: "AI & Engineering", initials: "MC", photo: "/founders/matteo.jpg", linkedin: "https://www.linkedin.com/in/matteo-camellini-209a28244/", phrase: "Builds the models behind the markets, from neural nets to quant finance." },
-  { name: "Giangiacomo Zanni", role: "Finance & Markets", initials: "GZ", photo: null, linkedin: "https://www.linkedin.com/in/giangiacomo-zanni/", phrase: "Brings structured-finance discipline from BNP Paribas Asset Management." },
+  { name: "Giangiacomo Zanni", role: "Finance & Markets", initials: "GZ", photo: "/founders/giangiacomo.png", linkedin: "https://www.linkedin.com/in/giangiacomo-zanni/", phrase: "Brings structured-finance discipline from BNP Paribas Asset Management." },
 ]
 
 const trustMarks = [
@@ -252,7 +255,7 @@ function TrustCarousel({ className }: { className?: string }) {
 
 function Founders() {
   return (
-    <section id="who-we-are" data-section="who-we-are" className="scroll-mt-0 border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-20 sm:px-10 md:py-[7.5rem] lg:px-16 xl:px-[88px]">
+    <section id="who-we-are" data-section="who-we-are" className="border-t border-[var(--p-ink-line)] bg-[var(--p-bg)] px-6 py-20 sm:px-10 md:py-[7.5rem] lg:px-16 xl:px-[88px]">
       <div className="mx-auto max-w-[1440px]">
         <div className="max-w-3xl">
           <h2 className="bsp-section-title text-[var(--p-ink)]">
@@ -299,14 +302,14 @@ function ClosingCTA({
     <section
       id="join"
       data-section="join"
-      className="relative scroll-mt-0 overflow-hidden bg-[var(--p-bg-alt)] px-6 py-20 text-center sm:px-10 md:py-[7.5rem] lg:px-16 xl:px-[88px]"
+      className="relative overflow-hidden bg-[var(--p-bg-alt)] px-6 py-20 text-center sm:px-10 md:py-[7.5rem] lg:px-16 xl:px-[88px]"
     >
       {theme.dark ? (
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_85%,color-mix(in_srgb,var(--p-accent)_28%,transparent)_0%,transparent_62%)]" />
       ) : null}
       <div className="relative mx-auto max-w-5xl">
         <div className="mb-9 flex justify-center">
-          <ParityMark size="small" href="#hero" />
+          <ParityMark size="small" />
         </div>
         <h2 className="bsp-display text-[var(--p-ink)]">
           {theme.closingTitle.map((line, index) => (
@@ -338,7 +341,7 @@ function Footer({ theme }: { theme: PersonaTheme }) {
   return (
     <footer className="bg-[var(--p-bg)] px-6 pb-32 pt-12 sm:px-10 lg:px-16 lg:py-12 xl:px-[88px]">
       <div className="mx-auto flex max-w-[1440px] flex-col gap-5 text-xs text-[var(--p-ink-mute)]">
-        <ParityMark size="small" href="#hero" />
+        <ParityMark size="small" />
         <p className="max-w-3xl text-[13px] font-normal leading-[1.8]">
           Parity is a concept landing page for a private-market investing platform.
           Private startup investments are high-risk, and may result in total loss of capital.

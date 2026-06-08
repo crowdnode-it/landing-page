@@ -11,6 +11,7 @@ import {
 } from "lucide-react"
 
 import type { PersonaKey } from "@/lib/personas"
+import { BentoAnimator } from "@/components/landing/bento-animator"
 
 type ValueBlock = {
   id: string
@@ -19,6 +20,7 @@ type ValueBlock = {
   span: "big" | "wide" | "small"
   imageIndex: 1 | 2 | 3 | 4 | 5 | 6
   Icon: LucideIcon
+  svgFile: string
 }
 
 const valueBlocks: ValueBlock[] = [
@@ -30,6 +32,7 @@ const valueBlocks: ValueBlock[] = [
     span: "big",
     imageIndex: 1,
     Icon: Building2,
+    svgFile: "startup_equity_as_digital_tokens.svg",
   },
   {
     id: "founders",
@@ -39,6 +42,7 @@ const valueBlocks: ValueBlock[] = [
     span: "small",
     imageIndex: 4,
     Icon: MessageSquare,
+    svgFile: "direct_communication_with_founders.svg",
   },
   {
     id: "sell",
@@ -48,8 +52,9 @@ const valueBlocks: ValueBlock[] = [
     span: "small",
     imageIndex: 3,
     Icon: ArrowLeftRight,
+    svgFile: "sell_your_equity_when_you_want.svg",
   },
-    {
+  {
     id: "etf",
     title: 'Invest in a Startup "ETF"',
     body:
@@ -57,6 +62,7 @@ const valueBlocks: ValueBlock[] = [
     span: "wide",
     imageIndex: 2,
     Icon: TrendingUp,
+    svgFile: "invest_in_a_startup_etf.svg",
   },
   {
     id: "updates",
@@ -66,6 +72,7 @@ const valueBlocks: ValueBlock[] = [
     span: "wide",
     imageIndex: 5,
     Icon: Users,
+    svgFile: "active_communication_during_investment.svg",
   },
   {
     id: "grow",
@@ -75,6 +82,7 @@ const valueBlocks: ValueBlock[] = [
     span: "wide",
     imageIndex: 6,
     Icon: Sprout,
+    svgFile: "help_startups_grow.svg",
   },
 ]
 
@@ -82,6 +90,16 @@ const personaImageNames: Record<PersonaKey, string> = {
   lara: "Lara",
   johann: "Johann",
   bob: "Bob",
+}
+
+// Pick the pre-rasterized PNG for the card illustration. Rasterized PNGs are
+// static GPU textures, so they avoid the per-frame vector re-rasterization that
+// corrupts the large traced SVGs on mobile GPUs. Light personas (johann) use
+// black line art; dark personas (lara/bob) use white.
+function cardImageSrc(svgFile: string, persona: PersonaKey): string {
+  const base = svgFile.replace(/\.svg$/, "")
+  const variant = persona === "johann" ? "black" : "white"
+  return `/value-cards/${base}-${variant}.png`
 }
 
 function ValueIcon({ Icon, className }: { Icon: LucideIcon; className?: string }) {
@@ -160,7 +178,15 @@ function ValueModal({
             </h3>
             <p className="bsp-body vp-panel-body">{item.body}</p>
           </div>
-          {/* <ModalVisual item={item} persona={persona} /> */}
+          <div className="vp-svg-wrap" aria-hidden="true">
+            <img
+              className="vp-svg"
+              src={cardImageSrc(item.svgFile, persona)}
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -428,21 +454,31 @@ export function ValueProps({ persona }: { persona: PersonaKey }) {
 
         @keyframes vp-featured-click {
           0%, 100% {
-            transform: translateY(0) scale(1);
+            transform: translate(0, 0) scale(1) rotate(0deg);
             box-shadow:
               0 1px 0 color-mix(in srgb, var(--p-ink) 8%, transparent) inset,
               0 22px 40px -34px rgba(0, 0, 0, 0.9);
           }
-          45% {
-            transform: translateY(-9px) scale(1.018);
+          38% {
+            transform: translate(-2px, -9px) scale(1.018) rotate(-0.6deg);
             border-color: color-mix(in srgb, var(--p-accent) 74%, transparent);
             box-shadow:
               0 1px 0 color-mix(in srgb, var(--p-ink) 14%, transparent) inset,
               0 44px 74px -38px rgba(0, 0, 0, 0.98),
               0 0 0 2px color-mix(in srgb, var(--p-accent) 28%, transparent);
           }
-          58% {
-            transform: translateY(-4px) scale(1.006);
+          44% {
+            transform: translate(2px, -8px) scale(1.016) rotate(0.6deg);
+            border-color: color-mix(in srgb, var(--p-accent) 74%, transparent);
+          }
+          50% {
+            transform: translate(-2px, -8px) scale(1.014) rotate(-0.5deg);
+          }
+          56% {
+            transform: translate(2px, -7px) scale(1.012) rotate(0.5deg);
+          }
+          62% {
+            transform: translate(-1px, -5px) scale(1.008) rotate(-0.3deg);
           }
         }
 
@@ -611,6 +647,42 @@ export function ValueProps({ persona }: { persona: PersonaKey }) {
           object-fit: cover;
         }
 
+        .vp-svg-wrap {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          padding: clamp(8px, 1.5vw, 16px);
+          margin-top: clamp(16px, 3vw, 36px);
+        }
+
+        /* Static PNG line art (color baked in per persona). A plain <img> is a
+           single GPU texture — no CSS filter, no transform, no vector
+           re-rasterization — which is what fixes the mobile tile artifacts.
+           Bounded by BOTH max-width and a vh-capped max-height with
+           object-fit:contain, so the whole illustration always fits on any
+           viewport: never cropped, never forces the modal to scroll. */
+        .vp-svg {
+          display: block;
+          width: auto;
+          height: auto;
+          max-width: 100%;
+          max-height: clamp(160px, 30vh, 300px);
+          object-fit: contain;
+          opacity: 0.85;
+        }
+
+        /* These two read better a bit larger — allow more height, still fully
+           visible and bounded by max-width:100% on narrow screens. */
+        #value-tokens .vp-svg {
+          max-height: clamp(180px, 34vh, 340px);
+        }
+
+        #value-grow .vp-svg {
+          max-height: clamp(200px, 38vh, 380px);
+        }
+
+
         @media (max-width: 44rem) {
           .vp-grid {
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -745,6 +817,7 @@ export function ValueProps({ persona }: { persona: PersonaKey }) {
       {valueBlocks.map((item) => (
         <ValueModal key={item.id} item={item} persona={persona} />
       ))}
+      <BentoAnimator />
     </section>
   )
 }
