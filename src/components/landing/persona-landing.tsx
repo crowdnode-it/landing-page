@@ -326,7 +326,6 @@ function ClosingCTA({
           <WaitlistForm
             centered
             persona={theme.key}
-            formLocation="closing"
             initialSubmitted={initialWaitlistSubmitted}
           />
         </div>

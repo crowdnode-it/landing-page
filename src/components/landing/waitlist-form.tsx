@@ -24,12 +24,10 @@ const roles = [
 export function WaitlistForm({
   centered = false,
   persona = "unknown",
-  formLocation = "hero",
   initialSubmitted = false,
 }: {
   centered?: boolean
   persona?: string
-  formLocation?: string
   initialSubmitted?: boolean
 }) {
   const [email, setEmail] = useState("")
@@ -62,7 +60,6 @@ export function WaitlistForm({
         fired = true
         trackFormAbandon(
           persona,
-          formLocation,
           s.emailFilled,
           s.roleFilled,
           s.lastFieldTouched,
@@ -82,7 +79,7 @@ export function WaitlistForm({
       document.removeEventListener("visibilitychange", onVisibilityChange)
       window.removeEventListener("pagehide", fireAbandon)
     }
-  }, [persona, formLocation])
+  }, [persona, ])
 
   function handleEmailFocus() {
     if (!formState.current.touchStartTime) {
@@ -90,11 +87,11 @@ export function WaitlistForm({
       recordFormTouch()
     }
     formState.current.lastFieldTouched = "email"
-    trackFormFieldInteract(persona, formLocation, "email", "focus")
+    trackFormFieldInteract(persona, "email", "focus")
   }
 
   function handleEmailBlur() {
-    trackFormFieldInteract(persona, formLocation, "email", emailRef.current?.value ? "blur_filled" : "blur_empty")
+    trackFormFieldInteract(persona, "email", emailRef.current?.value ? "blur_filled" : "blur_empty")
   }
 
   function handleRoleChange(value: string) {
@@ -105,7 +102,7 @@ export function WaitlistForm({
       formState.current.touchStartTime = Date.now()
       recordFormTouch()
     }
-    trackFormFieldInteract(persona, formLocation, "role", "changed")
+    trackFormFieldInteract(persona, "role", "changed")
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -122,7 +119,7 @@ export function WaitlistForm({
     formState.current.emailFilled = true
     formState.current.roleFilled = true
     formState.current.submitted = true
-    trackWaitlistSignup(persona, submittedRole, formLocation)
+    trackWaitlistSignup(persona, submittedRole)
     recordConversion()
     setSubmittedEmail(submittedEmail)
     event.currentTarget.reset()
@@ -154,7 +151,7 @@ export function WaitlistForm({
         className={cn("flex flex-col gap-3", centered && "mx-auto w-full max-w-md")}
       >
         <input type="hidden" name="persona" value={persona} />
-        <input type="hidden" name="formLocation" value={formLocation} />
+        <input type="hidden"/>
         <div className="flex flex-col gap-3 sm:flex-row">
           <input
             ref={emailRef}

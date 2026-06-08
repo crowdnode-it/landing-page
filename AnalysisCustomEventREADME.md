@@ -1,4 +1,3 @@
-
 # The 10 Custom Events
 ## 1. page_landed
 
@@ -12,7 +11,6 @@
 * `utm_source` → from URL param
 * `utm_campaign` → from URL param
 
-**Answers:** ToF Q3 (CPC comparison when linked to Meta data), ToF Q4 (IAB detection baseline), Post-Click Q2 (returning vs. first-touch population split)
 
 
 ## 2. session_survived_3s
@@ -23,18 +21,6 @@
 * `persona` → "bob" | "johann" | "lara"
 * `iab_type` → "instagram" | "facebook" | "none"
 
-**Answers:** ToF Q4 — "Is the Instagram audience surviving the first 3 seconds?" Cross-tabulate `iab_type=instagram` sessions where this event fires vs. total `page_landed` to get the IAB survival rate.
-
-
-## 3. scroll_depth
-
-**Trigger:** fires once per threshold — 25%, 50%, 75%, 90% — using a scroll event listener with a Set of fired thresholds
-**Implementation:** `useEffect` in PersonaLanding, calculates `scrollY / (documentHeight - viewportHeight)`
-
-* `persona` → "bob" | "johann" | "lara"
-* `depth_pct` → 25 | 50 | 75 | 90
-
-**Answers:** MoF Q1 (scroll depth per persona), MoF Q2 (compare scroll depth between users who later convert vs. those who don't — GA4 funnel or segment analysis), BoF Q2 (did they hit 50% before submitting? — answered by `waitlist_signup.passed_50pct`)
 
 
 ## 4. section_dwell
@@ -45,22 +31,19 @@
 > **Note:** `_state.lastVisibleSection` is updated on every section *enter* with no minimum, so `waitlist_signup` always carries the correct last-seen section even for sections the user scrolled through quickly without triggering a `section_dwell` event.
 
 * `persona` → "bob" | "johann" | "lara"
-* `section_id` → "hero" | "founders" | "startkit" | "secondary" | "track" | "join"
-* `dwell_ms` → number (milliseconds section was visible, always > 2000)
+* `section_id` → "hero" | "value" | "join" | "who-we-are"
+* `dwell_ms` → number (milliseconds section was visible, always > 3500)
 
-**Answers:** MoF Q3 (which sections hold attention longest), MoF Q4 (cross-reference dwell by persona to see if Johann lingers on `#secondary` more than Bob)
 
 
 ## 5. nav_click
 
 **Trigger:** click on any navigation anchor carrying `data-track-nav` — desktop top nav or mobile bottom pill
 **Implementation:** event delegation on `document` in `PageAnalytics` (`src/components/analytics/page-analytics.tsx`); anchors in `persona-landing.tsx` carry `data-track-nav` and `data-track-nav-type` attributes
-
+top_desktop means values in the navbar from the desktop ( in the mobile version there is not )
 * `persona` → "bob" | "johann" | "lara"
-* `nav_type` → "top_desktop" | "mobile_pill"
-* `target` → "startkit" | "secondary" | "track"
-
-**Answers:** MoF Q5 — "Are users exploring or just scrolling?" Compare session rate of `nav_click` events vs. sessions where no `nav_click` fires but `scroll_depth≥75%` does. High scroll + no nav click = passive reader. Nav click = active explorer.
+* `nav_type` → "hero_primary" | "hero_secondary" | "top_cta" | "top_desktop"
+* `target` → "value_proposition" | "join" | "who-we-are" 
 
 
 ## 6. form_field_interact
@@ -69,11 +52,8 @@
 **Implementation:** add handlers to both fields in `waitlist-form.tsx`; track a `formState` ref (`{emailFocused, emailFilled, roleFilled, lastField}`)
 
 * `persona` → "bob" | "johann" | "lara"
-* `form_location` → "hero" | "closing" (passed as prop)
 * `field` → "email" | "role"
 * `action` → "focus" | "blur_empty" | "blur_filled" | "changed"
-
-**Answers:** Post-Click Q1 — field-by-field abandonment. Segment users who fired `form_field_interact` `field=email` `action=focus` but never fired `waitlist_signup` to see where they dropped. Specifically tells you: did they fail at the email step, or did they balk at the role dropdown?
 
 
 ## 7. form_abandon
@@ -98,19 +78,10 @@
 
 * `persona` → "bob" | "johann" | "lara"
 * `role` → the selected role option string
-* `form_location` → "hero" | "closing"
-* `scroll_depth_at_submit` → 0–100 (current scroll %)
-* `passed_50pct` → boolean (did `scroll_depth` ever hit 50 before this?)
 * `time_on_page_ms` → ms since page load
-* `last_visible_section` → "startkit" | "secondary" | "track" | "founders" | "hero"
+* `last_visible_section` → "who-we-are" | "value" | "join" | "hero"
 * `is_returning` → boolean
 * `visit_count` → number
-
-**Answers:** This is the master conversion event. It directly answers:
-* BoF Q2 (`passed_50pct` — did they actually read the tokenization mechanics?)
-* BoF Q3 (`last_visible_section`)
-* BoF Q4 (in GA4: create an Exploration → Segment Overlap of persona × country filtering on `waitlist_signup`)
-* Post-Click Q2 (`is_returning` + `visit_count`)
 
 
 ## 9. return_visit
@@ -122,10 +93,26 @@
 * `visit_count` → number (total visits including this one)
 * `prior_form_touch` → boolean (did they interact with the form on a previous visit?)
 
-**Answers:** Post-Click Q2 — "Impulsive vs. Returners." Compare `return_visit.prior_visit_count` distribution against `waitlist_signup.is_returning`. Reveals how long the consideration cycle is and which persona converts faster on return visits.
+## 10. box_clicked
+
+**Trigger:** fires immediately when a value proposition bento block is clicked to open its detailed modal overview.
+**Implementation:** delegated hash/URL listener or click capture in `PageAnalytics` (`src/components/analytics/page-analytics.tsx`) — fires `trackBoxOpen` instantly when `window.location.hash` changes to match a `#value-[id]` target block.
+
+* `persona` → "bob" | "johann" | "lara"
+* `box_id` → "tokens" | "founders" | "sell" | "etf" | "updates" | "grow"
 
 
-## 10. iab_exit_prompt (conditional)
+## 11. box_dwell
+
+**Trigger:** fires when an expanded value proposition details modal is closed, or when the user leaves the page while it's open — filters out unintentional click-and-close misclicks under 1 second.
+**Implementation:** managed via `hashchange`, `visibilitychange`, and component unmount events in `PageAnalytics` (`src/components/analytics/page-analytics.tsx`). Records `enterTime` when `#value-[id]` hits the URL hash, computes delta on exit, and dispatches event if `dwell_ms > 1000`.
+
+* `persona` → "bob" | "johann" | "lara"
+* `box_id` → "tokens" | "founders" | "sell" | "etf" | "updates" | "grow"
+* `dwell_ms` → number (milliseconds modal panel was kept open, always > 1000)
+
+
+## 12. iab_exit_prompt (conditional)
 
 **Trigger:** fires when `iab_type !== "none"` and the user taps the share button or tries to open in an external browser (detectable via a custom banner you render for IAB users)
 **Implementation:** render a small "Open in browser for best experience" banner only when UA indicates Instagram/Facebook IAB; instrument the banner's click

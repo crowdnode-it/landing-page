@@ -17,8 +17,6 @@ type IabType = "instagram" | "facebook" | "none"
 export const _state = {
   persona: "unknown",
   lastVisibleSection: "hero",
-  scrollDepthPct: 0,
-  passedHalfway: false,
   pageLoadTime: 0,
   isReturning: false,
   visitCount: 0,
@@ -33,7 +31,7 @@ function track(eventName: string, params: Record<string, unknown> = {}) {
     "color:#e9c46a;font-weight:bold;",
     params,
   )
-  if (typeof window !== "undefined" && typeof window.gtag === "function") {
+  if (typeof window.gtag === "function") {
     window.gtag("event", eventName, params)
   }
 }
@@ -51,11 +49,12 @@ export function detectIab(): IabType {
 export function getVisitInfo() {
   try {
     const visited = localStorage.getItem("parity_visited")
-    const converted = localStorage.getItem("parity_converted")
+    const convertedRaw = localStorage.getItem("parity_converted");
+    const isConverted = convertedRaw === "0";
     const count = parseInt(localStorage.getItem("parity_visit_count") ?? "0", 10)
     const priorFormTouch = !!localStorage.getItem("parity_form_touched")
     return {
-      isReturning: !!visited && !converted,
+      isReturning: !!visited && !isConverted,
       visitCount: count,
       priorFormTouch,
     }
@@ -124,11 +123,6 @@ export function trackSessionSurvived3s(persona: string, iabType: string) {
   track("session_survived_3s", { persona, iab_type: iabType })
 }
 
-/** MoF Q1-Q2 · fires at 25 / 50 / 75 / 90 scroll thresholds */
-export function trackScrollDepth(persona: string, depthPct: number) {
-  track("scroll_depth", { persona, depth_pct: depthPct })
-}
-
 /** MoF Q3-Q4 · fires when a section leaves the viewport, carrying the ms it was visible */
 export function trackSectionDwell(persona: string, sectionId: string, dwellMs: number) {
   track("section_dwell", { persona, section_id: sectionId, dwell_ms: dwellMs })
@@ -142,22 +136,34 @@ export function trackNavClick(persona: string, navType: string, target: string) 
 /** Post-Click Q1 · fires on email focus/blur and role select change */
 export function trackFormFieldInteract(
   persona: string,
-  formLocation: string,
   field: string,
   action: string,
 ) {
   track("form_field_interact", {
     persona,
-    form_location: formLocation,
     field,
     action,
+  })
+}
+
+export function trackBoxDwell(persona: string, boxId: string, dwellMs: number) {
+   track("box_dwell", {
+    persona : persona,
+    box_id: boxId,
+    dwell_ms: dwellMs,
+  })
+}
+
+export function trackBoxOpen(persona: string, boxId: string) {
+   track("box_clicked", {
+    persona : persona,
+    box_id: boxId
   })
 }
 
 /** Post-Click Q1 · fires on tab-hide / page-hide when form was touched but not submitted */
 export function trackFormAbandon(
   persona: string,
-  formLocation: string,
   emailFilled: boolean,
   roleFilled: boolean,
   lastFieldTouched: string | null,
@@ -165,7 +171,6 @@ export function trackFormAbandon(
 ) {
   track("form_abandon", {
     persona,
-    form_location: formLocation,
     email_filled: emailFilled,
     role_filled: roleFilled,
     last_field_touched: lastFieldTouched,
@@ -174,15 +179,12 @@ export function trackFormAbandon(
 }
 
 /** BoF Q1-Q4 + Post-Click Q2 · master conversion event fired on successful form submit */
-export function trackWaitlistSignup(persona: string, role: string, formLocation: string) {
+export function trackWaitlistSignup(persona: string, role: string) {
   track("waitlist_signup", {
     persona,
     role,
-    form_location: formLocation,
-    scroll_depth_at_submit: _state.scrollDepthPct,
-    passed_50pct: _state.passedHalfway,
+    lastVisibleSection : _state.lastVisibleSection,
     time_on_page_ms: Date.now() - _state.pageLoadTime,
-    last_visible_section: _state.lastVisibleSection,
     is_returning: _state.isReturning,
     visit_count: _state.visitCount,
   })
