@@ -653,19 +653,18 @@ export function ValueProps({ persona }: { persona: PersonaKey }) {
 
         /* lara: dark green bg → white lines */
         [data-persona="lara"] .vp-svg {
-          filter: brightness(0) invert(1);
+          filter: invert(1);
           opacity: 0.82;
         }
 
-        /* johann: light grey bg → black lines */
+        /* johann: light grey bg → SVGs are black by default, no filter needed */
         [data-persona="johann"] .vp-svg {
-          filter: brightness(0);
-          opacity: 0.75;
+          opacity: 0.72;
         }
 
         /* bob: very dark bg → white lines */
         [data-persona="bob"] .vp-svg {
-          filter: brightness(0) invert(1);
+          filter: invert(1);
           opacity: 0.82;
         }
 
