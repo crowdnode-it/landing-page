@@ -11,6 +11,7 @@ import {
 } from "lucide-react"
 
 import type { PersonaKey } from "@/lib/personas"
+import { BentoAnimator } from "@/components/landing/bento-animator"
 
 type ValueBlock = {
   id: string
@@ -453,21 +454,31 @@ export function ValueProps({ persona }: { persona: PersonaKey }) {
 
         @keyframes vp-featured-click {
           0%, 100% {
-            transform: translateY(0) scale(1);
+            transform: translate(0, 0) scale(1) rotate(0deg);
             box-shadow:
               0 1px 0 color-mix(in srgb, var(--p-ink) 8%, transparent) inset,
               0 22px 40px -34px rgba(0, 0, 0, 0.9);
           }
-          45% {
-            transform: translateY(-9px) scale(1.018);
+          38% {
+            transform: translate(-2px, -9px) scale(1.018) rotate(-0.6deg);
             border-color: color-mix(in srgb, var(--p-accent) 74%, transparent);
             box-shadow:
               0 1px 0 color-mix(in srgb, var(--p-ink) 14%, transparent) inset,
               0 44px 74px -38px rgba(0, 0, 0, 0.98),
               0 0 0 2px color-mix(in srgb, var(--p-accent) 28%, transparent);
           }
-          58% {
-            transform: translateY(-4px) scale(1.006);
+          44% {
+            transform: translate(2px, -8px) scale(1.016) rotate(0.6deg);
+            border-color: color-mix(in srgb, var(--p-accent) 74%, transparent);
+          }
+          50% {
+            transform: translate(-2px, -8px) scale(1.014) rotate(-0.5deg);
+          }
+          56% {
+            transform: translate(2px, -7px) scale(1.012) rotate(0.5deg);
+          }
+          62% {
+            transform: translate(-1px, -5px) scale(1.008) rotate(-0.3deg);
           }
         }
 
@@ -663,7 +674,8 @@ export function ValueProps({ persona }: { persona: PersonaKey }) {
         }
 
         #value-grow .vp-svg {
-          width: 150%;
+          width: 200%;
+          margin-left: -24%;
         }
 
 
@@ -801,6 +813,7 @@ export function ValueProps({ persona }: { persona: PersonaKey }) {
       {valueBlocks.map((item) => (
         <ValueModal key={item.id} item={item} persona={persona} />
       ))}
+      <BentoAnimator />
     </section>
   )
 }

@@ -217,7 +217,7 @@ const founders = [
   { name: "Antonio De Cinque", role: "Product & Design", initials: "AD", photo: "/founders/antonio.jpeg", linkedin: "https://www.linkedin.com/in/antonio-de-cinque/", phrase: "Turns product vision into experiences that feel functional and beautiful." },
   { name: "Bruno Carchia", role: "Strategy & Operations", initials: "BC", photo: "/founders/bruno.jpeg", linkedin: "https://www.linkedin.com/in/bruno-carchia/", phrase: "Drives Parity's organization and technical execution from Stockholm." },
   { name: "Matteo Camellini", role: "AI & Engineering", initials: "MC", photo: "/founders/matteo.jpg", linkedin: "https://www.linkedin.com/in/matteo-camellini-209a28244/", phrase: "Builds the models behind the markets, from neural nets to quant finance." },
-  { name: "Giangiacomo Zanni", role: "Finance & Markets", initials: "GZ", photo: null, linkedin: "https://www.linkedin.com/in/giangiacomo-zanni/", phrase: "Brings structured-finance discipline from BNP Paribas Asset Management." },
+  { name: "Giangiacomo Zanni", role: "Finance & Markets", initials: "GZ", photo: "/founders/giangiacomo.png", linkedin: "https://www.linkedin.com/in/giangiacomo-zanni/", phrase: "Brings structured-finance discipline from BNP Paribas Asset Management." },
 ]
 
 const trustMarks = [
