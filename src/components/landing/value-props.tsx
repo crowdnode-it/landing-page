@@ -651,31 +651,35 @@ export function ValueProps({ persona }: { persona: PersonaKey }) {
           display: flex;
           align-items: center;
           justify-content: center;
-          overflow: hidden;
           width: 100%;
           padding: clamp(8px, 1.5vw, 16px);
-          margin-top: clamp(30px, 5vw, 55px);
+          margin-top: clamp(16px, 3vw, 36px);
         }
 
         /* Static PNG line art (color baked in per persona). A plain <img> is a
            single GPU texture — no CSS filter, no transform, no vector
-           re-rasterization — which is what fixes the mobile tile artifacts. */
+           re-rasterization — which is what fixes the mobile tile artifacts.
+           Bounded by BOTH max-width and a vh-capped max-height with
+           object-fit:contain, so the whole illustration always fits on any
+           viewport: never cropped, never forces the modal to scroll. */
         .vp-svg {
           display: block;
-          width: 100%;
+          width: auto;
           height: auto;
+          max-width: 100%;
+          max-height: clamp(160px, 30vh, 300px);
+          object-fit: contain;
           opacity: 0.85;
         }
 
-        /* Make these two illustrations larger; they overflow the column and are
-           clipped by the wrap's overflow:hidden, centered by the flex container. */
+        /* These two read better a bit larger — allow more height, still fully
+           visible and bounded by max-width:100% on narrow screens. */
         #value-tokens .vp-svg {
-          width: 118%;
+          max-height: clamp(180px, 34vh, 340px);
         }
 
         #value-grow .vp-svg {
-          width: 200%;
-          margin-left: -24%;
+          max-height: clamp(200px, 38vh, 380px);
         }
 
 
