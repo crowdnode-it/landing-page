@@ -19,6 +19,7 @@ type ValueBlock = {
   span: "big" | "wide" | "small"
   imageIndex: 1 | 2 | 3 | 4 | 5 | 6
   Icon: LucideIcon
+  svgFile: string
 }
 
 const valueBlocks: ValueBlock[] = [
@@ -30,6 +31,7 @@ const valueBlocks: ValueBlock[] = [
     span: "big",
     imageIndex: 1,
     Icon: Building2,
+    svgFile: "startup_equity_as_digital_tokens.svg",
   },
   {
     id: "founders",
@@ -39,6 +41,7 @@ const valueBlocks: ValueBlock[] = [
     span: "small",
     imageIndex: 4,
     Icon: MessageSquare,
+    svgFile: "direct_communication_with_founders.svg",
   },
   {
     id: "sell",
@@ -48,8 +51,9 @@ const valueBlocks: ValueBlock[] = [
     span: "small",
     imageIndex: 3,
     Icon: ArrowLeftRight,
+    svgFile: "sell_your_equity_when_you_want.svg",
   },
-    {
+  {
     id: "etf",
     title: 'Invest in a Startup "ETF"',
     body:
@@ -57,6 +61,7 @@ const valueBlocks: ValueBlock[] = [
     span: "wide",
     imageIndex: 2,
     Icon: TrendingUp,
+    svgFile: "invest_in_a_startup_etf.svg",
   },
   {
     id: "updates",
@@ -66,6 +71,7 @@ const valueBlocks: ValueBlock[] = [
     span: "wide",
     imageIndex: 5,
     Icon: Users,
+    svgFile: "active_communication_during_investment.svg",
   },
   {
     id: "grow",
@@ -75,6 +81,7 @@ const valueBlocks: ValueBlock[] = [
     span: "wide",
     imageIndex: 6,
     Icon: Sprout,
+    svgFile: "help_startups_grow.svg",
   },
 ]
 
@@ -160,7 +167,13 @@ function ValueModal({
             </h3>
             <p className="bsp-body vp-panel-body">{item.body}</p>
           </div>
-          {/* <ModalVisual item={item} persona={persona} /> */}
+          <div className="vp-svg-wrap" aria-hidden="true">
+            <img
+              className="vp-svg"
+              src={`/value-cards/${item.svgFile}`}
+              alt=""
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -610,6 +623,52 @@ export function ValueProps({ persona }: { persona: PersonaKey }) {
           height: 100%;
           object-fit: cover;
         }
+
+        .vp-svg-wrap {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          width: 100%;
+          padding: clamp(8px, 1.5vw, 16px);
+          margin-top: clamp(30px, 5vw, 55px);
+        }
+
+        .vp-svg {
+          display: block;
+          width: 100%;
+          height: auto;
+          object-fit: contain;
+        }
+
+        #value-tokens .vp-svg {
+          transform: scale(1.2);
+          transform-origin: center;
+        }
+
+        #value-grow .vp-svg {
+          transform: scale(1.55);
+          transform-origin: center;
+        }
+
+        /* lara: dark green bg → white lines */
+        [data-persona="lara"] .vp-svg {
+          filter: brightness(0) invert(1);
+          opacity: 0.82;
+        }
+
+        /* johann: light grey bg → black lines */
+        [data-persona="johann"] .vp-svg {
+          filter: brightness(0);
+          opacity: 0.75;
+        }
+
+        /* bob: very dark bg → white lines */
+        [data-persona="bob"] .vp-svg {
+          filter: brightness(0) invert(1);
+          opacity: 0.82;
+        }
+
 
         @media (max-width: 44rem) {
           .vp-grid {
