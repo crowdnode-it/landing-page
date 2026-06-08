@@ -1,3 +1,6 @@
+import fs from "node:fs"
+import path from "node:path"
+
 import {
   ArrowLeftRight,
   ArrowUpRight,
@@ -91,6 +94,28 @@ const personaImageNames: Record<PersonaKey, string> = {
   bob: "Bob",
 }
 
+// Read the line-art SVGs at render time and inline them as vector markup.
+// Inlining (instead of <img> + CSS filter) lets us recolor via `currentColor`
+// and avoids the offscreen filtered-texture that corrupts on mobile GPUs.
+function loadInlineSvg(file: string): string {
+  const full = path.join(process.cwd(), "public", "value-cards", file)
+  let raw = fs.readFileSync(full, "utf8")
+  // Drop the XML prolog / DOCTYPE so the markup can be inlined into the DOM.
+  raw = raw.slice(raw.indexOf("<svg"))
+  // Strip explicit width/height so CSS controls sizing; viewBox keeps aspect ratio.
+  raw = raw.replace(/<svg([^>]*?)>/, (_match, attrs: string) => {
+    const cleaned = attrs
+      .replace(/\swidth="[^"]*"/, "")
+      .replace(/\sheight="[^"]*"/, "")
+    return `<svg${cleaned} focusable="false" aria-hidden="true">`
+  })
+  return raw
+}
+
+const inlineSvgs: Record<string, string> = Object.fromEntries(
+  valueBlocks.map((block) => [block.id, loadInlineSvg(block.svgFile)]),
+)
+
 function ValueIcon({ Icon, className }: { Icon: LucideIcon; className?: string }) {
   return <Icon className={className ?? "size-7"} strokeWidth={1.6} />
 }
@@ -167,13 +192,11 @@ function ValueModal({
             </h3>
             <p className="bsp-body vp-panel-body">{item.body}</p>
           </div>
-          <div className="vp-svg-wrap" aria-hidden="true">
-            <img
-              className="vp-svg"
-              src={`/value-cards/${item.svgFile}`}
-              alt=""
-            />
-          </div>
+          <div
+            className="vp-svg-wrap"
+            aria-hidden="true"
+            dangerouslySetInnerHTML={{ __html: inlineSvgs[item.id] }}
+          />
         </div>
       </div>
     </div>
@@ -634,37 +657,39 @@ export function ValueProps({ persona }: { persona: PersonaKey }) {
           margin-top: clamp(30px, 5vw, 55px);
         }
 
-        .vp-svg {
+        /* Inline SVG inherits its line color from currentColor (set per persona
+           below). No CSS filter, so no offscreen texture to corrupt on mobile. */
+        .vp-svg-wrap svg {
           display: block;
           width: 100%;
           height: auto;
-          object-fit: contain;
         }
 
-        #value-tokens .vp-svg {
-          transform: scale(1.2);
-          transform-origin: center;
+        /* Make these two illustrations larger; they overflow the column and are
+           clipped by the wrap's overflow:hidden, centered by the flex container. */
+        #value-tokens .vp-svg-wrap svg {
+          width: 118%;
         }
 
-        #value-grow .vp-svg {
-          transform: scale(1.55);
-          transform-origin: center;
+        #value-grow .vp-svg-wrap svg {
+          width: 150%;
         }
 
         /* lara: dark green bg → white lines */
-        [data-persona="lara"] .vp-svg {
-          filter: invert(1);
+        [data-persona="lara"] .vp-svg-wrap {
+          color: #ffffff;
           opacity: 0.82;
         }
 
-        /* johann: light grey bg → SVGs are black by default, no filter needed */
-        [data-persona="johann"] .vp-svg {
+        /* johann: light grey bg → black lines */
+        [data-persona="johann"] .vp-svg-wrap {
+          color: #101010;
           opacity: 0.72;
         }
 
         /* bob: very dark bg → white lines */
-        [data-persona="bob"] .vp-svg {
-          filter: invert(1);
+        [data-persona="bob"] .vp-svg-wrap {
+          color: #ffffff;
           opacity: 0.82;
         }
 
