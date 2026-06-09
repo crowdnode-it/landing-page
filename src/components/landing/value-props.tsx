@@ -12,6 +12,7 @@ import {
 
 import type { PersonaKey } from "@/lib/personas"
 import { BentoAnimator } from "@/components/landing/bento-animator"
+import { ValueModalController } from "@/components/landing/value-modal-controller"
 
 type ValueBlock = {
   id: string
@@ -161,6 +162,7 @@ function ValueModal({
         href="#value"
         className="vp-modal-backdrop"
         aria-label="Close details"
+        tabIndex={-1}
       />
 
       <div className="vp-modal-panel">
@@ -494,6 +496,12 @@ export function ValueProps({ persona }: { persona: PersonaKey }) {
           58% { transform: translate(1px, -1px) scale(1); }
         }
 
+        /* Lock page scroll while any value-card modal is open (CSS :target driven).
+           The modal panel scrolls internally via its own overflow:auto. */
+        :root:has(.vp-modal:target) {
+          overflow: hidden;
+        }
+
         .vp-modal {
           position: fixed;
           inset: 0;
@@ -818,6 +826,7 @@ export function ValueProps({ persona }: { persona: PersonaKey }) {
         <ValueModal key={item.id} item={item} persona={persona} />
       ))}
       <BentoAnimator />
+      <ValueModalController />
     </section>
   )
 }
