@@ -10,6 +10,11 @@ import {
   trackFormFieldInteract,
   trackWaitlistSignup,
 } from "@/lib/analytics"
+import { waitlistEmailMaxLength, waitlistEmailPattern } from "@/lib/waitlist"
+
+// Same regex the server validates with, minus the ^…$ anchors the HTML
+// `pattern` attribute adds itself — so client and server enforce one rule.
+const emailInputPattern = waitlistEmailPattern.source.slice(1, -1)
 
 const roles = [
   "Just curious - show me what you've got",
@@ -36,6 +41,10 @@ export function WaitlistForm({
   const [submittedEmail, setSubmittedEmail] = useState("")
   const emailRef = useRef<HTMLInputElement>(null)
   const roleRef = useRef<HTMLSelectElement>(null)
+  // Synchronous in-flight lock: blocks a second submit from a fast double-click
+  // or Enter-spam before React re-renders. Released when the success modal is
+  // dismissed, so it does not change resubmit behaviour.
+  const submittingRef = useRef(false)
 
   // Refs for abandon tracking — written synchronously in handlers so abandon listeners
   // always read current values, even if they fire before the next React render cycle.
@@ -108,7 +117,11 @@ export function WaitlistForm({
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    if (submitted) return
+    // `submitted` is async React state; on a fast double-click both events can
+    // read the stale `false` before a re-render. submittingRef is synchronous,
+    // so the second event sees `true` immediately and bails — no double POST.
+    if (submitted || submittingRef.current) return
+    submittingRef.current = true
 
     const formData = new FormData(event.currentTarget)
     const submittedEmail = String(formData.get("email") ?? emailRef.current?.value ?? email).trim()
@@ -132,6 +145,13 @@ export function WaitlistForm({
     fetch("/api/waitlist", { method: "POST", body: formData }).catch((err) => {
       console.error("[waitlist] failed to save lead:", err)
     })
+  }
+
+  function closeSuccess() {
+    // Release the in-flight lock so the form behaves exactly as before once the
+    // success modal is dismissed (resubmit behaviour intentionally unchanged).
+    submittingRef.current = false
+    setSubmitted(false)
   }
 
   const fieldClass = cn(
@@ -160,6 +180,9 @@ export function WaitlistForm({
             inputMode="email"
             autoComplete="email"
             required
+            pattern={emailInputPattern}
+            maxLength={waitlistEmailMaxLength}
+            title="Enter a valid email address, e.g. name@example.com"
             onChange={(e) => {
               setEmail(e.target.value)
               formState.current.emailFilled = !!e.target.value
@@ -230,7 +253,7 @@ export function WaitlistForm({
             <button
               type="button"
               aria-label="Close"
-              onClick={() => setSubmitted(false)}
+              onClick={closeSuccess}
               className="absolute right-4 top-4 grid size-8 place-items-center rounded-full text-[var(--p-ink-soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--p-surface)_70%,transparent)] hover:text-[var(--p-ink)]"
             >
               <X className="size-4" />
@@ -257,7 +280,7 @@ export function WaitlistForm({
             )}
             <button
               type="button"
-              onClick={() => setSubmitted(false)}
+              onClick={closeSuccess}
               className="mt-7 h-11 rounded-full bg-[var(--p-ink)] px-6 text-sm font-bold text-[var(--p-bg)] transition-opacity hover:opacity-90"
             >
               Done

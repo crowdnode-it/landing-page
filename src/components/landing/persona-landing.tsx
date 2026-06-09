@@ -339,7 +339,7 @@ function ClosingCTA({
 
 function Footer({ theme }: { theme: PersonaTheme }) {
   return (
-    <footer className="bg-[var(--p-bg)] px-6 pb-32 pt-12 sm:px-10 lg:px-16 lg:py-12 xl:px-[88px]">
+    <footer className="bg-[var(--p-bg)] px-6 pb-12 pt-12 sm:px-10 lg:px-16 lg:py-12 xl:px-[88px]">
       <div className="mx-auto flex max-w-[1440px] flex-col gap-5 text-xs text-[var(--p-ink-mute)]">
         <ParityMark size="small" />
         <p className="max-w-3xl text-[13px] font-normal leading-[1.8]">
