@@ -201,15 +201,18 @@ export function WaitlistForm({
               onChange={(e) => handleRoleChange(e.target.value)}
               className={cn(
                 fieldClass,
-                "appearance-none pr-10 [color-scheme:light_dark]",
+                "appearance-none pr-10 [color-scheme:light]",
                 !role && "text-[var(--p-ink-mute)]"
               )}
             >
-              <option value="" disabled>
+              {/* Explicit option colours so the native dropdown stays readable
+                  on the dark personas (Bob/Lara), where it otherwise inherits
+                  light text onto the OS's grey popup. */}
+              <option value="" disabled style={{ color: "#6b7280", backgroundColor: "#ffffff" }}>
                 I am...
               </option>
               {roles.map((r) => (
-                <option key={r} value={r}>
+                <option key={r} value={r} style={{ color: "#101010", backgroundColor: "#ffffff" }}>
                   {r}
                 </option>
               ))}
