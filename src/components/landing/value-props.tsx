@@ -24,12 +24,12 @@ type ValueBlock = {
   svgFile: string
 }
 
-const valueBlocks: ValueBlock[] = [
+export const valueBlocks: ValueBlock[] = [
   {
     id: "tokens",
     title: "Startup Equity as Digital Tokens",
     body:
-      "Our platform turns ownership into secure digital tokens, making it easier than ever to hold a stake in promising companies. You can finally own a real piece of a startup with the same simplicity as buying a stock online.",
+      "We tokenize startup equity on the blockchain to eliminate back-office delays and paperwork. When you buy or sell shares, the transfer is final, instant, and fully verified on-chain. Real ownership, zero friction.",
     span: "big",
     imageIndex: 1,
     Icon: Building2,
@@ -39,7 +39,7 @@ const valueBlocks: ValueBlock[] = [
     id: "founders",
     title: "Direct Communication with Founders",
     body:
-      "You aren't just a number in a spreadsheet; you are a partner. Our platform opens a direct line to the people building the business, allowing you to ask questions and stay informed directly from the source.",
+      "Don't just wire money and wait in the dark. We establish a direct line to the founders so you receive continuous, transparent updates and can engage directly with the people building the product.",
     span: "small",
     imageIndex: 4,
     Icon: MessageSquare,
@@ -49,7 +49,7 @@ const valueBlocks: ValueBlock[] = [
     id: "sell",
     title: "Sell Your Equity When You Want",
     body:
-      "Traditional startup investments are usually locked away for years, but we are changing that. Our platform provides a secondary market, giving you the freedom to trade or sell your shares whenever it suits your personal financial goals.",
+      "Startup investing usually means locking your money away for 10 years. We built a secondary market to fix that. List your equity, find a buyer, and exit whenever you want with instant, atomic smart-contract settlements.",
     span: "small",
     imageIndex: 3,
     Icon: ArrowLeftRight,
@@ -59,7 +59,7 @@ const valueBlocks: ValueBlock[] = [
     id: "etf",
     title: 'Invest in a Startup "ETF"',
     body:
-      "Instead of betting on just one company, you can easily spread your investment across a basket of different startups. This helps you build a balanced, diversified portfolio while reducing your overall risk.",
+      "Introducing StartKit: back multiple startups in a single transaction starting from just €200. Pick the companies, set your weights, and automatically diversify your risk like a micro-VC, all without paying fund manager fees.",
     span: "wide",
     imageIndex: 2,
     Icon: TrendingUp,
@@ -69,7 +69,7 @@ const valueBlocks: ValueBlock[] = [
     id: "updates",
     title: "Active Communication During Investment",
     body:
-      "We keep you in the loop throughout the entire journey, not just during the initial purchase. You will receive consistent updates on key milestones, challenges, and wins as the company evolves.",
+      "We use AI agents and live data integrations to give you deep-context updates. Track real performance metrics, live secondary market prices, and milestones in real time so you always know exactly what's happening to your money.",
     span: "wide",
     imageIndex: 5,
     Icon: Users,
@@ -79,13 +79,13 @@ const valueBlocks: ValueBlock[] = [
     id: "grow",
     title: "Help Startups Grow",
     body:
-      "Your investment does more than just provide capital—it provides a voice. You can share your insights and expertise to help the companies you believe in succeed and reach their full potential.",
+      "Leverage your expertise to protect and grow your investment. Our platform creates a powerful community network where investors can actively support founders—whether through legal advice, engineering, or networking—driving the business forward.",
     span: "wide",
     imageIndex: 6,
     Icon: Sprout,
     svgFile: "help_startups_grow.svg",
   },
-]
+];
 
 const personaImageNames: Record<PersonaKey, string> = {
   lara: "Lara",
