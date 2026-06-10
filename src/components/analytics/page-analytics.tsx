@@ -17,6 +17,8 @@ import {
 } from "@/lib/analytics"
 import type { PersonaKey } from "@/lib/personas"
 
+const TRACKED_BOX_IDS = new Set(["tokens", "founders", "sell", "etf", "updates", "grow"])
+
 /**
  * Invisible client component mounted once inside PersonaLanding.
  * Handles all passive tracking: page_landed, session_survived_3s, scroll_depth,
@@ -104,11 +106,15 @@ export function PageAnalytics({ persona }: { persona: PersonaKey }) {
 
       // Se l'hash punta a un modal delle box (es: #value-tokens)
       if (hash.startsWith("#value-")) {
+        const boxId = hash.replace("#value-", "")
+        if (!TRACKED_BOX_IDS.has(boxId)) {
+          flushBoxDwell()
+          return
+        }
+
         // Se c'era già un'altra box aperta, salviamo prima i suoi dati di durata
         flushBoxDwell()
-        
-        const boxId = hash.replace("#value-", "")
-        
+
         // 1. Tracciamento IMMEDIATO dell'apertura del box
         trackBoxOpen(persona, boxId)
         
@@ -174,8 +180,11 @@ export function PageAnalytics({ persona }: { persona: PersonaKey }) {
         // Se la pagina torna visibile e c'è ancora l'hash del modal attivo, riavvia il counter del modal
         const hash = window.location.hash
         if (hash.startsWith("#value-")) {
+          const boxId = hash.replace("#value-", "")
+          if (!TRACKED_BOX_IDS.has(boxId)) return
+
           activeBoxRef.current = {
-            id: hash.replace("#value-", ""),
+            id: boxId,
             enterTime: Date.now()
           }
         }

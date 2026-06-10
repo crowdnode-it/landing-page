@@ -6,6 +6,7 @@ import "./globals.css";
 // Set NEXT_PUBLIC_GA_MEASUREMENT_ID in your .env.local to enable GA4 reporting.
 // Events are always logged to the browser console regardless of this variable.
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID
 
 const instrumentSans = Instrument_Sans({
   variable: "--font-instrument-sans",
@@ -59,6 +60,33 @@ export default function RootLayout({
               src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
               strategy="afterInteractive"
             />
+          </>
+        )}
+        {META_PIXEL_ID && (
+          <>
+            {/* Inline so fbq exists before PageAnalytics effects fire; the external
+                script loads async and replays queued events. */}
+            <script dangerouslySetInnerHTML={{ __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', ${JSON.stringify(META_PIXEL_ID)});
+              fbq('track', 'PageView');
+            `}} />
+            <noscript>
+              <img
+                height="1"
+                width="1"
+                style={{ display: "none" }}
+                src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+                alt=""
+              />
+            </noscript>
           </>
         )}
       </body>

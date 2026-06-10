@@ -7,6 +7,8 @@ declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void
     dataLayer?: unknown[]
+    fbq?: (...args: unknown[]) => void
+    _fbq?: unknown
   }
 }
 
@@ -24,6 +26,16 @@ export const _state = {
 }
 
 // ─── Core dispatcher ──────────────────────────────────────────────────────────
+function trackMeta(eventName: string, params: Record<string, unknown>) {
+  if (typeof window === "undefined" || typeof window.fbq !== "function") return
+
+  if (eventName === "waitlist_signup") {
+    window.fbq("track", "Lead", params)
+  }
+
+  window.fbq("trackCustom", eventName, params)
+}
+
 function track(eventName: string, params: Record<string, unknown> = {}) {
   console.log(
     `%c[Analytics] %c${eventName}`,
@@ -31,9 +43,10 @@ function track(eventName: string, params: Record<string, unknown> = {}) {
     "color:#e9c46a;font-weight:bold;",
     params,
   )
-  if (typeof window.gtag === "function") {
+  if (typeof window !== "undefined" && typeof window.gtag === "function") {
     window.gtag("event", eventName, params)
   }
+  trackMeta(eventName, params)
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -49,8 +62,8 @@ export function detectIab(): IabType {
 export function getVisitInfo() {
   try {
     const visited = localStorage.getItem("parity_visited")
-    const convertedRaw = localStorage.getItem("parity_converted");
-    const isConverted = convertedRaw === "0";
+    const convertedRaw = localStorage.getItem("parity_converted")
+    const isConverted = convertedRaw === "1"
     const count = parseInt(localStorage.getItem("parity_visit_count") ?? "0", 10)
     const priorFormTouch = !!localStorage.getItem("parity_form_touched")
     return {
@@ -146,6 +159,11 @@ export function trackFormFieldInteract(
   })
 }
 
+/** Post-Click Q1 · fires once when a user first touches the waitlist form */
+export function trackFormStarted(persona: string) {
+  track("form_started", { persona })
+}
+
 export function trackBoxDwell(persona: string, boxId: string, dwellMs: number) {
    track("box_dwell", {
     persona : persona,
@@ -183,7 +201,7 @@ export function trackWaitlistSignup(persona: string, role: string) {
   track("waitlist_signup", {
     persona,
     role,
-    lastVisibleSection : _state.lastVisibleSection,
+    last_visible_section: _state.lastVisibleSection,
     time_on_page_ms: Date.now() - _state.pageLoadTime,
     is_returning: _state.isReturning,
     visit_count: _state.visitCount,

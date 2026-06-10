@@ -8,6 +8,7 @@ import {
   recordFormTouch,
   trackFormAbandon,
   trackFormFieldInteract,
+  trackFormStarted,
   trackWaitlistSignup,
 } from "@/lib/analytics"
 import { waitlistEmailMaxLength, waitlistEmailPattern } from "@/lib/waitlist"
@@ -94,6 +95,7 @@ export function WaitlistForm({
     if (!formState.current.touchStartTime) {
       formState.current.touchStartTime = Date.now()
       recordFormTouch()
+      trackFormStarted(persona)
     }
     formState.current.lastFieldTouched = "email"
     trackFormFieldInteract(persona, "email", "focus")
@@ -110,6 +112,7 @@ export function WaitlistForm({
     if (!formState.current.touchStartTime) {
       formState.current.touchStartTime = Date.now()
       recordFormTouch()
+      trackFormStarted(persona)
     }
     trackFormFieldInteract(persona, "role", "changed")
   }
